@@ -19,6 +19,8 @@ DOMAIN = "https://foundationcrawlspace.online"
 SITE_NAME = "Foundation & Crawlspace Directory"
 TRACKING_PHONE = "(916) 884-9689"
 TRACKING_TEL = "+19168849689"
+STRIPE_SPOTLIGHT_URL = "https://buy.stripe.com/bJefZh94WbXC7rt9bubEA0e"
+STRIPE_EXCLUSIVE_URL = "https://buy.stripe.com/3cI8wPa903r63bd3RabEA0f"
 TODAY_STR = date.today().isoformat()
 
 CITY_LOCAL_NOTES = {
@@ -616,7 +618,12 @@ def render_footer(cities: list) -> str:
     </div>
     <div class="footer-bottom">
       <span>Copyright &copy; {date.today().year} {SITE_NAME} (foundationcrawlspace.online). Public contractor data compiled from verified Google Business &amp; public filings.</span>
-      <span><a href="/sitemap.xml">Sitemap</a> &middot; <a href="/llms.txt">llms.txt (AI 3/3)</a></span>
+      <span>
+        <a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">CA CSLB License Check</a> &middot;
+        <a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey</a> &middot;
+        <a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Water Resources</a> &middot;
+        <a href="/sitemap.xml">Sitemap</a> &middot; <a href="/llms.txt">llms.txt</a>
+      </span>
     </div>
   </div>
 </footer>
@@ -727,12 +734,41 @@ def page_shell(title: str, desc: str, canon_path: str, body_html: str, cities: l
         label = canon_path.strip("/").replace("-", " ").title()
         schema_obj = {
             "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{DOMAIN}/"},
-                {"@type": "ListItem", "position": 2, "name": label, "item": f"{DOMAIN}{canon_path}"},
+            "@graph": [
+                {
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [
+                        {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{DOMAIN}/"},
+                        {"@type": "ListItem", "position": 2, "name": label, "item": f"{DOMAIN}{canon_path}"},
+                    ],
+                },
+                {
+                    "@type": "WebPage",
+                    "name": title,
+                    "url": f"{DOMAIN}{canon_path}",
+                    "speakable": {
+                        "@type": "SpeakableSpecification",
+                        "cssSelector": ["h1", ".direct-answer", ".panel p", ".guide-article p"],
+                    },
+                },
             ],
         }
+    elif schema_obj is not None:
+        wp_node = {
+            "@type": "WebPage",
+            "name": title,
+            "url": f"{DOMAIN}{canon_path}",
+            "speakable": {
+                "@type": "SpeakableSpecification",
+                "cssSelector": ["h1", ".direct-answer", ".panel p", ".guide-article p"],
+            },
+        }
+        if "@graph" in schema_obj and isinstance(schema_obj["@graph"], list):
+            if not any(isinstance(n, dict) and n.get("@type") == "WebPage" for n in schema_obj["@graph"]):
+                schema_obj["@graph"].append(wp_node)
+        else:
+            inner = {k: v for k, v in schema_obj.items() if k != "@context"}
+            schema_obj = {"@context": "https://schema.org", "@graph": [inner, wp_node]}
     schema_tag = ""
     if schema_obj:
         schema_tag = f'<script type="application/ld+json">{json.dumps(schema_obj, ensure_ascii=False)}</script>'
@@ -1092,6 +1128,35 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
                     for idx, c in enumerate(list_co, start=1)
                 ],
             },
+            {
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "How much does it typically cost to fix foundation issues?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": f"In {city}, CA, minor French drains and crawlspace moisture fixes usually run $2,500 to $6,000, while structural push piers, slab leveling, and full crawlspace encapsulation average $6,000 to $25,000+.",
+                        },
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Will insurance pay for foundation repair?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Standard homeowner insurance excludes soil settling, expansive clay movement, and normal foundation wear. Coverage usually applies only when sudden plumbing pipe breaks directly undermine the slab or footings.",
+                        },
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "How much should it cost to encapsulate a crawl space?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": f"Full 20-mil vapor barrier crawlspace encapsulation, rim joist sealing, and dehumidifier setup in {city} generally ranges from $4,500 to $12,500 depending on access height and square footage.",
+                        },
+                    },
+                ],
+            },
         ],
     }
 
@@ -1122,6 +1187,16 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
 
       <h2 style="margin-top:0;">Listed Contractors in {esc(city)} ({len(list_co)})</h2>
       <div class="biz-grid">{cards_html}</div>
+
+      <div class="panel" style="margin-top: 1.75rem;">
+        <h2 style="margin-top:0;">Residential Foundation Repair &amp; Crawlspace Cost in {esc(city)}</h2>
+        <h3>How much does it typically cost to fix foundation issues?</h3>
+        <p>In {esc(city)}, CA, minor French drains and crawlspace moisture fixes usually run $2,500 to $6,000, while structural push piers, slab leveling, and full crawlspace encapsulation average $6,000 to $25,000+.</p>
+        <h3>Will insurance pay for foundation repair?</h3>
+        <p>Standard homeowner insurance excludes soil settling, expansive clay movement, and normal foundation wear. Coverage usually applies only when sudden plumbing pipe breaks directly undermine the slab or footings.</p>
+        <h3>How much should it cost to encapsulate a crawl space?</h3>
+        <p>Full 20-mil vapor barrier crawlspace encapsulation, rim joist sealing, and dehumidifier setup in {esc(city)} generally ranges from $4,500 to $12,500 depending on access height and square footage. Always confirm an active California C-57 or B/C-8 contractor license on the <a href="https://www.cslb.ca.gov/" target="_blank" rel="noopener noreferrer">CSLB lookup portal</a> before signing.</p>
+      </div>
     </div>
 
     <div>
@@ -1472,7 +1547,12 @@ def build_static_pages(all_cities: list) -> dict:
       <button type="submit" class="btn action" style="padding: 0.85rem; font-size: 1rem;">Submit Verification Request</button>
     </form>
     <div class="form-status">
-      <strong>Verification Submitted.</strong> We received your profile claim and will confirm your listing updates shortly. Need priority placement? Call <a href="tel:{TRACKING_TEL}">{TRACKING_PHONE}</a>.
+      <strong>Verification Submitted.</strong> We received your profile claim and will confirm your listing updates shortly.
+      <div style="margin-top:0.85rem; display:flex; flex-wrap:wrap; gap:0.5rem;">
+        <a class="btn action" href="{STRIPE_SPOTLIGHT_URL}" target="_blank" rel="noopener">Lock #1 City Spotlight ($49/mo)</a>
+        <a class="btn primary" href="{STRIPE_EXCLUSIVE_URL}" target="_blank" rel="noopener">Exclusive City Leads ($149/mo)</a>
+        <a class="btn subtle" href="tel:{TRACKING_TEL}">Call {TRACKING_PHONE}</a>
+      </div>
     </div>
   </div>
 </div>
@@ -1496,9 +1576,12 @@ def build_static_pages(all_cities: list) -> dict:
     featured_body = f"""
 <div class="wrap" style="margin: 2rem auto 4rem;">
   <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; Featured &amp; Lead Routing</div>
+  <div id="subBanner" class="panel" style="display:none; background:#ecfdf5; border:2px solid #10b981; color:#065f46; margin-bottom:1.25rem;">
+    <strong>Subscription Active.</strong> Thank you! Send your company name, target city, CSLB number, and dispatch phone below (or call <a href="tel:{TRACKING_TEL}">{TRACKING_PHONE}</a>) so we pin your Featured Sponsor card live right away.
+  </div>
   <h1>Get Featured &amp; Capture Exclusive Local Inspection Leads</h1>
   <p style="color: var(--muted); max-width: 72ch;">
-    Put your company at the very top of your city pages on foundationcrawlspace.online, or lock exclusive homeowner inspection leads in your service radius.
+    Put your company at the very top of your city pages on foundationcrawlspace.online, or lock exclusive homeowner inspection leads in your service radius. Cancel anytime, month-to-month.
   </p>
 
   <div class="biz-grid" style="margin-top:1.75rem;">
@@ -1515,15 +1598,21 @@ def build_static_pages(all_cities: list) -> dict:
       <div class="biz-name">City Spotlight Listing</div>
       <p style="font-size:1.4rem; font-weight:800; color:var(--heading); margin:0.25rem 0;">$49 / mo</p>
       <p style="font-size:0.92rem;">Pinned #1 card above regular listings in your target city, Verified Sponsor badge, and direct call/quote button.</p>
-      <div class="biz-foot"><a class="btn action" style="width:100%;" href="tel:{TRACKING_TEL}">Call {TRACKING_PHONE} to Lock</a></div>
+      <div class="biz-foot" style="gap:0.45rem;">
+        <a class="btn action" style="width:100%;" href="{STRIPE_SPOTLIGHT_URL}" target="_blank" rel="noopener">Subscribe &amp; Lock City ($49/mo)</a>
+        <a class="phone-link" href="tel:{TRACKING_TEL}" style="width:100%; text-align:center; font-size:0.86rem;">Questions? Call {TRACKING_PHONE}</a>
+      </div>
     </div>
 
     <div class="biz-card" id="leads">
       <div class="biz-top"><span class="badge">Exclusive</span><span>Lead Routing</span></div>
       <div class="biz-name">Exclusive City Lead Partner</div>
       <p style="font-size:1.4rem; font-weight:800; color:var(--heading); margin:0.25rem 0;">$149 / mo</p>
-      <p style="font-size:0.92rem;">Top placement across 3 cities plus exclusive homeowner inspection requests and inbound calls forwarded live to your dispatch line.</p>
-      <div class="biz-foot"><a class="btn primary" style="width:100%;" href="tel:{TRACKING_TEL}">Reserve City Territory</a></div>
+      <p style="font-size:0.92rem;">Top placement across up to 3 cities plus exclusive homeowner inspection requests and inbound calls forwarded live to your dispatch line.</p>
+      <div class="biz-foot" style="gap:0.45rem;">
+        <a class="btn primary" style="width:100%;" href="{STRIPE_EXCLUSIVE_URL}" target="_blank" rel="noopener">Subscribe Exclusive ($149/mo)</a>
+        <a class="phone-link" href="tel:{TRACKING_TEL}" style="width:100%; text-align:center; font-size:0.86rem;">Questions? Call {TRACKING_PHONE}</a>
+      </div>
     </div>
   </div>
 
@@ -1540,6 +1629,15 @@ def build_static_pages(all_cities: list) -> dict:
     {render_quote_form(heading="Inquire About a Featured City Slot or Exclusive Leads", lead_type="featured")}
   </div>
 </div>
+<script>
+(function() {{
+  var p = new URLSearchParams(window.location.search);
+  if (p.get('subscribed')) {{
+    var el = document.getElementById('subBanner');
+    if (el) el.style.display = 'block';
+  }}
+}})();
+</script>
 """
     pages["/featured/"] = page_shell(
         "Featured Contractor Listings & Lead Routing | Foundation & Crawlspace Directory",

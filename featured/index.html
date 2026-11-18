@@ -395,7 +395,7 @@ a:hover { text-decoration: underline; }
   .dir-search button { border-radius: 10px; }
 }
 </style>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://foundationcrawlspace.online/"}, {"@type": "ListItem", "position": 2, "name": "Featured", "item": "https://foundationcrawlspace.online/featured/"}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://foundationcrawlspace.online/"}, {"@type": "ListItem", "position": 2, "name": "Featured", "item": "https://foundationcrawlspace.online/featured/"}]}, {"@type": "WebPage", "name": "Featured Contractor Listings & Lead Routing | Foundation & Crawlspace Directory", "url": "https://foundationcrawlspace.online/featured/", "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["h1", ".direct-answer", ".panel p", ".guide-article p"]}}]}</script>
 </head>
 <body>
 
@@ -416,9 +416,12 @@ a:hover { text-decoration: underline; }
 
 <div class="wrap" style="margin: 2rem auto 4rem;">
   <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; Featured &amp; Lead Routing</div>
+  <div id="subBanner" class="panel" style="display:none; background:#ecfdf5; border:2px solid #10b981; color:#065f46; margin-bottom:1.25rem;">
+    <strong>Subscription Active.</strong> Thank you! Send your company name, target city, CSLB number, and dispatch phone below (or call <a href="tel:+19168849689">(916) 884-9689</a>) so we pin your Featured Sponsor card live right away.
+  </div>
   <h1>Get Featured &amp; Capture Exclusive Local Inspection Leads</h1>
   <p style="color: var(--muted); max-width: 72ch;">
-    Put your company at the very top of your city pages on foundationcrawlspace.online, or lock exclusive homeowner inspection leads in your service radius.
+    Put your company at the very top of your city pages on foundationcrawlspace.online, or lock exclusive homeowner inspection leads in your service radius. Cancel anytime, month-to-month.
   </p>
 
   <div class="biz-grid" style="margin-top:1.75rem;">
@@ -435,15 +438,21 @@ a:hover { text-decoration: underline; }
       <div class="biz-name">City Spotlight Listing</div>
       <p style="font-size:1.4rem; font-weight:800; color:var(--heading); margin:0.25rem 0;">$49 / mo</p>
       <p style="font-size:0.92rem;">Pinned #1 card above regular listings in your target city, Verified Sponsor badge, and direct call/quote button.</p>
-      <div class="biz-foot"><a class="btn action" style="width:100%;" href="tel:+19168849689">Call (916) 884-9689 to Lock</a></div>
+      <div class="biz-foot" style="gap:0.45rem;">
+        <a class="btn action" style="width:100%;" href="https://buy.stripe.com/bJefZh94WbXC7rt9bubEA0e" target="_blank" rel="noopener">Subscribe &amp; Lock City ($49/mo)</a>
+        <a class="phone-link" href="tel:+19168849689" style="width:100%; text-align:center; font-size:0.86rem;">Questions? Call (916) 884-9689</a>
+      </div>
     </div>
 
     <div class="biz-card" id="leads">
       <div class="biz-top"><span class="badge">Exclusive</span><span>Lead Routing</span></div>
       <div class="biz-name">Exclusive City Lead Partner</div>
       <p style="font-size:1.4rem; font-weight:800; color:var(--heading); margin:0.25rem 0;">$149 / mo</p>
-      <p style="font-size:0.92rem;">Top placement across 3 cities plus exclusive homeowner inspection requests and inbound calls forwarded live to your dispatch line.</p>
-      <div class="biz-foot"><a class="btn primary" style="width:100%;" href="tel:+19168849689">Reserve City Territory</a></div>
+      <p style="font-size:0.92rem;">Top placement across up to 3 cities plus exclusive homeowner inspection requests and inbound calls forwarded live to your dispatch line.</p>
+      <div class="biz-foot" style="gap:0.45rem;">
+        <a class="btn primary" style="width:100%;" href="https://buy.stripe.com/3cI8wPa903r63bd3RabEA0f" target="_blank" rel="noopener">Subscribe Exclusive ($149/mo)</a>
+        <a class="phone-link" href="tel:+19168849689" style="width:100%; text-align:center; font-size:0.86rem;">Questions? Call (916) 884-9689</a>
+      </div>
     </div>
   </div>
 
@@ -506,6 +515,15 @@ a:hover { text-decoration: underline; }
 
   </div>
 </div>
+<script>
+(function() {
+  var p = new URLSearchParams(window.location.search);
+  if (p.get('subscribed')) {
+    var el = document.getElementById('subBanner');
+    if (el) el.style.display = 'block';
+  }
+})();
+</script>
 
 </main>
 
@@ -550,7 +568,12 @@ a:hover { text-decoration: underline; }
     </div>
     <div class="footer-bottom">
       <span>Copyright &copy; 2026 Foundation & Crawlspace Directory (foundationcrawlspace.online). Public contractor data compiled from verified Google Business &amp; public filings.</span>
-      <span><a href="/sitemap.xml">Sitemap</a> &middot; <a href="/llms.txt">llms.txt (AI 3/3)</a></span>
+      <span>
+        <a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">CA CSLB License Check</a> &middot;
+        <a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey</a> &middot;
+        <a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Water Resources</a> &middot;
+        <a href="/sitemap.xml">Sitemap</a> &middot; <a href="/llms.txt">llms.txt</a>
+      </span>
     </div>
   </div>
 </footer>
