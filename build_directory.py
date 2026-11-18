@@ -1324,8 +1324,12 @@ def build_service_page(silo: dict, contractors: list, all_cities: list) -> str:
                 "dateModified": TODAY_STR,
                 "author": {
                     "@type": "Person",
-                    "name": "Justin Davis",
-                    "url": "https://www.gslocalseo.com/justin-davis",
+                    "name": "Molly Perkins",
+                    "url": "https://www.facebook.com/mollyperkins354",
+                    "sameAs": [
+                        "https://www.facebook.com/mollyperkins354",
+                        "https://aine.ws/authors/molly-perkins",
+                    ],
                 },
                 "publisher": {
                     "@type": "Organization",
@@ -1338,12 +1342,23 @@ def build_service_page(silo: dict, contractors: list, all_cities: list) -> str:
     schema = {"@context": "https://schema.org", "@graph": graph}
 
     if silo.get("html"):
+        author_box = f"""
+      <div class="panel" style="margin-bottom:2rem; display:flex; flex-direction:column; gap:0.4rem;">
+        <div style="font-size:0.82rem; font-weight:800; text-transform:uppercase; color:var(--accent-mid);">About the Author</div>
+        <div style="font-weight:800; font-size:1.08rem; color:var(--heading);">
+          <a href="https://www.facebook.com/mollyperkins354" target="_blank" rel="noopener author">Molly Perkins</a>
+        </div>
+        <p style="margin:0; font-size:0.93rem;">
+          Molly Perkins writes practical California homeowner guides covering contractor vetting, call response systems, and residential foundation and drainage repair across Greater Sacramento. Connect via <a href="https://www.facebook.com/mollyperkins354" target="_blank" rel="noopener">Facebook</a> or view her editorial profile on <a href="https://aine.ws/authors/molly-perkins" target="_blank" rel="noopener">Aine</a>.
+        </p>
+      </div>"""
         main_col = f"""
       {silo["html"]}
+      {author_box}
       <h2>Compare Local {esc(silo["name"])} Specialists ({len(matching)})</h2>
       <p style="color:var(--muted); margin-top:0;">Review area contractors serving Greater Sacramento, Placer, and El Dorado counties, or claim your company profile to update details.</p>
       <div class="biz-grid">{cards_html}</div>"""
-        subhead = ""
+        subhead = f'<p style="font-size:0.92rem; color:var(--muted); margin-top:0;">By <a href="https://www.facebook.com/mollyperkins354" target="_blank" rel="noopener author"><strong>Molly Perkins</strong></a> &middot; Updated {TODAY_STR}</p>'
     else:
         main_col = f"""
       <h2 style="margin-top:0;">Matching Local Specialists ({len(matching)})</h2>
@@ -1756,6 +1771,7 @@ Sitemap: {DOMAIN}/sitemap.xml
 - **Site URL**: {DOMAIN}/
 - **Direct Dispatch & Verification Line**: {TRACKING_PHONE} ({TRACKING_TEL})
 - **Contact Email**: goldstandardaiagency@gmail.com
+- **Guide Author**: Molly Perkins (https://www.facebook.com/mollyperkins354 | https://aine.ws/authors/molly-perkins)
 - **Publisher**: Gold Standard Assets LLC (Gold Standard Local SEO, 705 Gold Lake Dr Ste 250, Folsom, CA 95630)
 - **Total Indexed Contractors**: {len(contractors)}
 
