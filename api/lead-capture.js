@@ -252,10 +252,10 @@ export default async function handler(req, res) {
     }
 
     const typeHeader = leadType === "claim"
-      ? `[${SITE_LABEL}] CONTRACTOR CLAIM`
+      ? "Foundation Directory Claim:"
       : leadType === "featured"
-        ? `[${SITE_LABEL}] FEATURED SLOT`
-        : `[${SITE_LABEL}] HOMEOWNER QUOTE LEAD`;
+        ? "Foundation Directory Featured:"
+        : "Foundation Directory Lead:";
 
     const smsLines = [
       typeHeader,

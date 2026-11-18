@@ -58,11 +58,11 @@ export default async function handler(req, res) {
     await Promise.allSettled([
       sendSms(
         ALERT_PHONE,
-        `[foundationcrawlspace.online] MISSED CALL ALERT\nCaller: ${callerPhone}\nSent missed-call text-back automatically.`
+        `Foundation Directory Missed Call from ${callerPhone}. Auto reply sent.`
       ),
       sendSms(
         callerPhone,
-        "Thanks for calling Foundation & Crawlspace Directory (foundationcrawlspace.online). Sorry we missed your call. Reply here with your city and what you need checked (foundation cracks, crawlspace moisture, or yard drainage) and we will connect you right away."
+        "Thanks for calling Foundation & Crawlspace Directory. Sorry we missed your call. Reply here with your city and what you need checked (foundation cracks, crawlspace moisture, or drainage) and we will follow up right away."
       )
     ]);
   }

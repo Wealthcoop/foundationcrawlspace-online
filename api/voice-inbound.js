@@ -19,7 +19,7 @@ async function alertIncomingCall(callerPhone) {
       body: JSON.stringify({
         from: TELNYX_FROM,
         to: ALERT_PHONE,
-        text: `[foundationcrawlspace.online] INBOUND CALL\nCaller: ${callerPhone}\nLine dialed: (916) 884-9689`,
+        text: `Foundation Directory Call: ${callerPhone} just dialed (916) 884-9689.`,
         messaging_profile_id: TELNYX_PROFILE_ID
       })
     });
