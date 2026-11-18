@@ -577,6 +577,12 @@ AUTHORITY_BENCHMARK_TABLE = """
   <p style="font-size:0.9rem; color:var(--muted); margin-top:0;">
     Verified regional baselines for Greater Sacramento, Placer, and El Dorado homeowners from official state agencies.
   </p>
+  <figure style="margin:0 0 1.25rem; padding:0.75rem; border:1px solid var(--border); border-radius:8px; background:#fff;">
+    <img src="/assets/sacramento-foundation-repair-cost-cslb-benchmarks.jpg" alt="Sacramento foundation repair cost, crawlspace encapsulation pricing, and CSLB licensing benchmark chart" width="1200" height="700" loading="lazy" style="width:100%; height:auto; display:block; border-radius:6px;" />
+    <figcaption style="font-size:0.84rem; color:var(--muted); margin-top:0.6rem;">
+      Chart: 2026 Greater Sacramento residential foundation repair, foam lifting, French drain, and CSLB $25,000 contractor bond cost baselines. Sources: <a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB</a>, <a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Dept. of Water Resources</a>, and <a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey</a>. Download full <a href="/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf" target="_blank" rel="noopener">2026 California Foundation &amp; CSLB Benchmark PDF</a> or view the <a href="https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026" target="_blank" rel="noopener noreferrer">Archive.org public record</a>.
+    </figcaption>
+  </figure>
   <table class="info-table" style="min-width:520px;">
     <thead>
       <tr>
@@ -608,6 +614,18 @@ AUTHORITY_BENCHMARK_TABLE = """
       </tr>
     </tbody>
   </table>
+</div>
+"""
+
+COVERAGE_CHART_FIGURE = """
+<div class="panel" style="margin-top: 1.5rem;">
+  <h2 style="margin-top:0;">Greater Sacramento, Placer &amp; El Dorado Contractor Distribution</h2>
+  <figure style="margin:0; padding:0.75rem; border:1px solid var(--border); border-radius:8px; background:#fff;">
+    <img src="/assets/greater-sacramento-contractor-coverage-tiers.jpg" alt="Greater Sacramento, Placer, and El Dorado County foundation and drainage contractor coverage breakdown chart" width="1200" height="700" loading="lazy" style="width:100%; height:auto; display:block; border-radius:6px;" />
+    <figcaption style="font-size:0.84rem; color:var(--muted); margin-top:0.6rem;">
+      Chart: Listed foundation underpinning, crawlspace vapor barrier, and French drain contractor density across Sacramento, Placer, and El Dorado County corridors. Regional housing context: <a href="https://www.census.gov/quickfacts/sacramentocountycalifornia" target="_blank" rel="noopener noreferrer">US Census Bureau QuickFacts</a> | <a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB</a> | <a href="/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf" target="_blank" rel="noopener">Companion Benchmark PDF</a> | <a href="https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026" target="_blank" rel="noopener noreferrer">Archive.org Mirror</a>.
+    </figcaption>
+  </figure>
 </div>
 """
 
@@ -810,6 +828,42 @@ def page_shell(title: str, desc: str, canon_path: str, body_html: str, cities: l
         else:
             inner = {k: v for k, v in schema_obj.items() if k != "@context"}
             schema_obj = {"@context": "https://schema.org", "@graph": [inner, wp_node]}
+
+    CHART_IMAGE_SPECS = [
+        (
+            "sacramento-foundation-repair-cost-cslb-benchmarks.jpg",
+            "Sacramento foundation repair cost, crawlspace encapsulation pricing, and CSLB licensing benchmark chart",
+        ),
+        (
+            "greater-sacramento-contractor-coverage-tiers.jpg",
+            "Greater Sacramento, Placer, and El Dorado County foundation and drainage contractor coverage breakdown chart",
+        ),
+    ]
+    image_nodes = []
+    for fname, caption in CHART_IMAGE_SPECS:
+        if fname in body_html:
+            img_url = f"{DOMAIN}/assets/{fname}"
+            image_nodes.append(
+                {
+                    "@type": "ImageObject",
+                    "@id": f"{img_url}#image",
+                    "url": img_url,
+                    "contentUrl": img_url,
+                    "caption": caption,
+                    "width": 1200,
+                    "height": 700,
+                    "representativeOfPage": True,
+                    "creator": {"@type": "Person", "name": "Molly Perkins"},
+                    "copyrightHolder": {"@type": "Organization", "name": "Gold Standard Assets LLC"},
+                }
+            )
+    if image_nodes and schema_obj and isinstance(schema_obj.get("@graph"), list):
+        schema_obj["@graph"].extend(image_nodes)
+        for node in schema_obj["@graph"]:
+            if isinstance(node, dict) and node.get("@type") == "WebPage":
+                node["primaryImageOfPage"] = {"@id": image_nodes[0]["@id"]}
+                break
+
     schema_tag = ""
     if schema_obj:
         schema_tag = f'<script type="application/ld+json">{json.dumps(schema_obj, ensure_ascii=False)}</script>'
@@ -948,6 +1002,7 @@ def build_homepage(contractors: list, cities_dict: dict, all_cities: list) -> st
   </section>
 
   {AUTHORITY_BENCHMARK_TABLE}
+  {COVERAGE_CHART_FIGURE}
 
   <section>
     <h2>Browse by Specialty</h2>
@@ -1045,6 +1100,7 @@ def build_directory_index(contractors: list, all_cities: list) -> str:
   <p id="resultCount" style="font-weight:700; color:var(--heading);">Showing {len(contractors)} contractors</p>
   <div id="resultsGrid" class="biz-grid">{cards_html}</div>
   {AUTHORITY_BENCHMARK_TABLE}
+  {COVERAGE_CHART_FIGURE}
 </div>
 
 <script>
@@ -1368,6 +1424,7 @@ def build_company_page(c: dict, cities_dict: dict, all_cities: list) -> str:
       {claim_card}
     </div>
   </div>
+  {AUTHORITY_BENCHMARK_TABLE}
 </div>
 """
     return page_shell(
@@ -1667,6 +1724,12 @@ def build_static_pages(all_cities: list) -> dict:
   <div style="max-width: 780px; margin-top: 2rem;">
     <div class="panel" style="overflow-x:auto;">
       <h2 style="margin-top:0;">Directory Tier Comparison: Free Listing vs. $49/mo Spotlight vs. $149/mo Exclusive</h2>
+      <figure style="margin:0 0 1.25rem; padding:0.75rem; border:1px solid var(--border); border-radius:8px; background:#fff;">
+        <img src="/assets/greater-sacramento-contractor-coverage-tiers.jpg" alt="Greater Sacramento, Placer, and El Dorado County foundation and drainage contractor coverage breakdown chart" width="1200" height="700" loading="lazy" style="width:100%; height:auto; display:block; border-radius:6px;" />
+        <figcaption style="font-size:0.84rem; color:var(--muted); margin-top:0.6rem;">
+          Chart: Regional contractor distribution across Greater Sacramento, Placer, and El Dorado cities. Sources: <a href="https://www.cslb.ca.gov/" target="_blank" rel="noopener noreferrer">California CSLB</a> &amp; <a href="https://www.census.gov/quickfacts/sacramentocountycalifornia" target="_blank" rel="noopener noreferrer">US Census QuickFacts</a> | <a href="/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf" target="_blank" rel="noopener">Companion Benchmark PDF</a> | <a href="https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026" target="_blank" rel="noopener noreferrer">Archive.org Mirror</a>.
+        </figcaption>
+      </figure>
       <table class="info-table" style="min-width:520px;">
         <thead>
           <tr><th>Plan Tier</th><th>Monthly Cost</th><th>Placement &amp; Lead Scope</th><th>Territory Exclusivity</th></tr>
@@ -1847,7 +1910,7 @@ def main():
     sitemap_entries = "".join(
         f"  <url><loc>{DOMAIN}{u}</loc><lastmod>{TODAY_STR}</lastmod></url>\n"
         for u in urls
-    )
+    ) + f"  <url><loc>{DOMAIN}/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf</loc><lastmod>{TODAY_STR}</lastmod></url>\n"
     sitemap_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {sitemap_entries}</urlset>
@@ -1960,6 +2023,8 @@ Sitemap: {DOMAIN}/sitemap.xml
 - [Request Foundation or Crawlspace Quotes]({DOMAIN}/quote/)
 - [Claim Free Contractor Profile]({DOMAIN}/claim/)
 - [Featured City Spotlight & Exclusive Lead Routing ($49 to $149/mo)]({DOMAIN}/featured/)
+- [2026 California Foundation & CSLB Benchmark PDF]({DOMAIN}/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf)
+- [Archive.org Authority Record](https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026)
 - [Full Directory Context (llms-full.txt)]({DOMAIN}/llms-full.txt)
 """
     (BASE_DIR / "llms.txt").write_text(llms_txt, encoding="utf-8")

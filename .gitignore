@@ -7,4 +7,6 @@ __pycache__/
 node_modules/
 *.csv
 OUTREACH_EMAIL_SEQUENCE.md
+dispatch_*.py
+*ledger*.json
 

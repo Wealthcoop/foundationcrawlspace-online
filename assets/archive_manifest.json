@@ -1,0 +1,26 @@
+{
+  "archive_item": "https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026",
+  "files": [
+    {
+      "success": true,
+      "status_code": 200,
+      "item_url": "https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026",
+      "file_url": "https://archive.org/download/sacramento-foundation-crawlspace-benchmarks-2026/california-foundation-crawlspace-drainage-benchmarks-2026.pdf",
+      "filename": "california-foundation-crawlspace-drainage-benchmarks-2026.pdf"
+    },
+    {
+      "success": true,
+      "status_code": 200,
+      "item_url": "https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026",
+      "file_url": "https://archive.org/download/sacramento-foundation-crawlspace-benchmarks-2026/sacramento-foundation-repair-cost-cslb-benchmarks.jpg",
+      "filename": "sacramento-foundation-repair-cost-cslb-benchmarks.jpg"
+    },
+    {
+      "success": true,
+      "status_code": 200,
+      "item_url": "https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026",
+      "file_url": "https://archive.org/download/sacramento-foundation-crawlspace-benchmarks-2026/greater-sacramento-contractor-coverage-tiers.jpg",
+      "filename": "greater-sacramento-contractor-coverage-tiers.jpg"
+    }
+  ]
+}

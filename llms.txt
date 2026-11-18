@@ -40,4 +40,6 @@
 - [Request Foundation or Crawlspace Quotes](https://foundationcrawlspace.online/quote/)
 - [Claim Free Contractor Profile](https://foundationcrawlspace.online/claim/)
 - [Featured City Spotlight & Exclusive Lead Routing ($49 to $149/mo)](https://foundationcrawlspace.online/featured/)
+- [2026 California Foundation & CSLB Benchmark PDF](https://foundationcrawlspace.online/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf)
+- [Archive.org Authority Record](https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026)
 - [Full Directory Context (llms-full.txt)](https://foundationcrawlspace.online/llms-full.txt)
