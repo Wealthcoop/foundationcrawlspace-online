@@ -6,4 +6,5 @@ __pycache__/
 .DS_Store
 node_modules/
 *.csv
+OUTREACH_EMAIL_SEQUENCE.md
 

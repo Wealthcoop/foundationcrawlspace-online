@@ -571,6 +571,47 @@ def render_header() -> str:
 """
 
 
+AUTHORITY_BENCHMARK_TABLE = """
+<div class="panel" style="margin-top: 1.5rem; overflow-x: auto;">
+  <h2 style="margin-top:0;">California Foundation Cost, Soil &amp; Licensing Benchmarks</h2>
+  <p style="font-size:0.9rem; color:var(--muted); margin-top:0;">
+    Verified regional baselines for Greater Sacramento, Placer, and El Dorado homeowners from official state agencies.
+  </p>
+  <table class="info-table" style="min-width:520px;">
+    <thead>
+      <tr>
+        <th style="width:28%;">Metric / Requirement</th>
+        <th>Verified Standard / Range</th>
+        <th>Authority Source</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Contractor License Bond</strong></td>
+        <td>$25,000 mandatory bond ($100,000 extra LLC worker bond)</td>
+        <td><a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB (B&amp;P Code 7071.6)</a></td>
+      </tr>
+      <tr>
+        <td><strong>Drainage &amp; Vapor Barriers</strong></td>
+        <td>$2,500 to $6,000 typical French drain / 20-mil liner project</td>
+        <td><a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Dept. of Water Resources Drainage Context</a></td>
+      </tr>
+      <tr>
+        <td><strong>Structural Piering &amp; Encapsulation</strong></td>
+        <td>$6,000 to $25,000+ depending on clay depth and slab size</td>
+        <td><a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey Soil Hazards</a></td>
+      </tr>
+      <tr>
+        <td><strong>Regional Housing Footprint</strong></td>
+        <td>Sacramento, Placer &amp; El Dorado County residential base</td>
+        <td><a href="https://www.census.gov/quickfacts/sacramentocountycalifornia" target="_blank" rel="noopener noreferrer">US Census Bureau QuickFacts</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+"""
+
+
 def render_footer(cities: list) -> str:
     city_links = "".join(
         f'<li><a href="/directory/california/{city_slug(c)}/">{esc(c)} Contractors</a></li>'
@@ -906,6 +947,8 @@ def build_homepage(contractors: list, cities_dict: dict, all_cities: list) -> st
     {render_quote_form(heading="Request Local Estimates &amp; Quotes")}
   </section>
 
+  {AUTHORITY_BENCHMARK_TABLE}
+
   <section>
     <h2>Browse by Specialty</h2>
     <div class="biz-grid">
@@ -1001,6 +1044,7 @@ def build_directory_index(contractors: list, all_cities: list) -> str:
 
   <p id="resultCount" style="font-weight:700; color:var(--heading);">Showing {len(contractors)} contractors</p>
   <div id="resultsGrid" class="biz-grid">{cards_html}</div>
+  {AUTHORITY_BENCHMARK_TABLE}
 </div>
 
 <script>
@@ -1197,6 +1241,7 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
         <h3>How much should it cost to encapsulate a crawl space?</h3>
         <p>Full 20-mil vapor barrier crawlspace encapsulation, rim joist sealing, and dehumidifier setup in {esc(city)} generally ranges from $4,500 to $12,500 depending on access height and square footage. Always confirm an active California C-57 or B/C-8 contractor license on the <a href="https://www.cslb.ca.gov/" target="_blank" rel="noopener noreferrer">CSLB lookup portal</a> before signing.</p>
       </div>
+      {AUTHORITY_BENCHMARK_TABLE}
     </div>
 
     <div>
@@ -1458,6 +1503,7 @@ def build_service_page(silo: dict, contractors: list, all_cities: list) -> str:
   <div class="two-col">
     <div>
       {main_col}
+      {AUTHORITY_BENCHMARK_TABLE}
     </div>
     <div>
       {render_quote_form(default_service=silo["name"], heading=f"Request {silo['name']} Quotes")}
@@ -1490,6 +1536,7 @@ def build_static_pages(all_cities: list) -> dict:
     Tell us what your home or crawlspace needs below, or call our dispatch desk at <a href="tel:{TRACKING_TEL}"><strong>{TRACKING_PHONE}</strong></a>. Submitting a request here is free; individual contractors confirm upfront if a diagnostic or real-estate escrow inspection fee applies.
   </p>
   {render_quote_form(heading="Homeowner Project Details")}
+  {AUTHORITY_BENCHMARK_TABLE}
 </div>
 """,
         all_cities,
@@ -1555,6 +1602,7 @@ def build_static_pages(all_cities: list) -> dict:
       </div>
     </div>
   </div>
+  {AUTHORITY_BENCHMARK_TABLE}
 </div>
 <script>
 (function() {{
@@ -1616,7 +1664,26 @@ def build_static_pages(all_cities: list) -> dict:
     </div>
   </div>
 
-  <div style="max-width: 700px; margin-top: 2rem;">
+  <div style="max-width: 780px; margin-top: 2rem;">
+    <div class="panel" style="overflow-x:auto;">
+      <h2 style="margin-top:0;">Directory Tier Comparison: Free Listing vs. $49/mo Spotlight vs. $149/mo Exclusive</h2>
+      <table class="info-table" style="min-width:520px;">
+        <thead>
+          <tr><th>Plan Tier</th><th>Monthly Cost</th><th>Placement &amp; Lead Scope</th><th>Territory Exclusivity</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Verified Public Profile</strong></td><td>$0 / mo</td><td>Standard city directory listing with verified phone &amp; CSLB badge</td><td>None (shared city page)</td></tr>
+          <tr><td><strong>City Spotlight Listing</strong></td><td>$49 / mo</td><td>Pinned #1 card above regular contractors in 1 city</td><td>1 Spotlight slot per city</td></tr>
+          <tr><td><strong>Exclusive City Lead Partner</strong></td><td>$149 / mo</td><td>Top placement in up to 3 cities + direct homeowner call/form routing</td><td>Exclusive lead routing per city</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.86rem; color:var(--muted); margin-bottom:0;">
+        Verification reference: California contractor license requirements via <a href="https://www.cslb.ca.gov/" target="_blank" rel="noopener noreferrer">California CSLB</a>.
+      </p>
+    </div>
+  </div>
+
+  <div style="max-width: 700px; margin-top: 1.5rem;">
     <div class="panel">
       <h2 style="margin-top:0;">Want Your Google Business Profile Ranking #1 Too?</h2>
       <p style="font-size:0.95rem;">
@@ -1667,6 +1734,7 @@ def build_static_pages(all_cities: list) -> dict:
     Maintained by <strong>Gold Standard Assets LLC</strong> (Gold Standard Local SEO), 705 Gold Lake Dr Ste 250, Folsom, CA 95630.<br />
     Verification Desk: <a href="tel:{TRACKING_TEL}">{TRACKING_PHONE}</a> | Email: <a href="mailto:goldstandardaiagency@gmail.com">goldstandardaiagency@gmail.com</a>
   </p>
+  {AUTHORITY_BENCHMARK_TABLE}
 </div>
 """,
         all_cities,
@@ -1683,6 +1751,7 @@ def build_static_pages(all_cities: list) -> dict:
   <h1>Contact Directory Desk</h1>
   <p>Call or text <a href="tel:{TRACKING_TEL}"><strong>{TRACKING_PHONE}</strong></a>, email <a href="mailto:goldstandardaiagency@gmail.com">goldstandardaiagency@gmail.com</a>, or send a note below.</p>
   {render_quote_form(heading="Send a Message or Listing Update")}
+  {AUTHORITY_BENCHMARK_TABLE}
 </div>
 """,
         all_cities,
@@ -1703,6 +1772,7 @@ def build_static_pages(all_cities: list) -> dict:
   <p>
     We do not sell visitor data to unrelated third-party ad networks. To update or delete an inquiry or business listing, call <a href="tel:{TRACKING_TEL}">{TRACKING_PHONE}</a> or email <a href="mailto:goldstandardaiagency@gmail.com">goldstandardaiagency@gmail.com</a>.
   </p>
+  {AUTHORITY_BENCHMARK_TABLE}
 </div>
 """,
         all_cities,
