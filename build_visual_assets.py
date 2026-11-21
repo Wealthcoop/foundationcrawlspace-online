@@ -64,6 +64,23 @@ def load_font(size: int, bold: bool = False):
     return ImageFont.load_default()
 
 
+def _fit_font(d: ImageDraw.ImageDraw, text: str, start_size: int, max_width: int, bold: bool = True):
+    size = start_size
+    while size >= 13:
+        font = load_font(size, bold=bold)
+        bbox = d.textbbox((0, 0), text, font=font)
+        if (bbox[2] - bbox[0]) <= max_width:
+            return font
+        size -= 1
+    return load_font(13, bold=bold)
+
+
+def _assert_fits(d: ImageDraw.ImageDraw, x: int, text: str, font, max_right: int, label: str):
+    bbox = d.textbbox((x, 0), text, font=font)
+    if bbox[2] > max_right:
+        raise ValueError(f"Chart text overflow [{label}]: '{text}' reaches {bbox[2]} > {max_right}")
+
+
 def draw_cost_cslb_chart(tmp_path: Path):
     w, h = 1200, 700
     img = Image.new("RGB", (w, h), (11, 37, 69))
@@ -71,41 +88,63 @@ def draw_cost_cslb_chart(tmp_path: Path):
 
     # Top accent band & inner panel
     d.rectangle([0, 0, w, 10], fill=(217, 119, 6))
-    d.rounded_rectangle([40, 36, w - 40, h - 36], radius=16, fill=(15, 48, 88), outline=(56, 189, 248), width=2)
+    panel_l, panel_t, panel_r, panel_b = 36, 32, w - 36, h - 32
+    pad_l = 68
+    pad_r = panel_r - 32
+    max_full_w = pad_r - pad_l
+    d.rounded_rectangle([panel_l, panel_t, panel_r, panel_b], radius=16, fill=(15, 48, 88), outline=(56, 189, 248), width=2)
 
-    f_tag = load_font(18, bold=True)
-    f_title = load_font(34, bold=True)
-    f_sub = load_font(20, bold=False)
-    f_lbl = load_font(21, bold=True)
-    f_val = load_font(20, bold=True)
-    f_note = load_font(16, bold=False)
+    tag_txt = "GREATER SACRAMENTO HOMEOWNER & LICENSING BENCHMARKS (2026)"
+    title_txt = "2026 Foundation, Crawlspace & French Drain Cost vs. CSLB Bonds"
+    sub_txt = "Regional residential cost baselines compared against mandatory California CSLB contractor bonds"
 
-    d.text((75, 58), "CALIFORNIA GREATER SACRAMENTO HOMEOWNER & LICENSING BENCHMARKS (2026)", font=f_tag, fill=(251, 191, 36))
-    d.text((75, 92), "Foundation Repair, Crawlspace & French Drain Cost vs. CSLB Bonds", font=f_title, fill=(255, 255, 255))
-    d.text((75, 138), "Regional cost baselines compared against mandatory California CSLB contractor bond requirements", font=f_sub, fill=(203, 213, 225))
+    f_tag = _fit_font(d, tag_txt, 17, max_full_w, bold=True)
+    f_title = _fit_font(d, title_txt, 31, max_full_w, bold=True)
+    f_sub = _fit_font(d, sub_txt, 19, max_full_w, bold=False)
+    f_lbl = load_font(20, bold=True)
+    f_val = load_font(19, bold=True)
+    f_note = load_font(15, bold=False)
+
+    d.text((pad_l, 56), tag_txt, font=f_tag, fill=(251, 191, 36))
+    d.text((pad_l, 88), title_txt, font=f_title, fill=(255, 255, 255))
+    d.text((pad_l, 132), sub_txt, font=f_sub, fill=(203, 213, 225))
+    _assert_fits(d, pad_l, title_txt, f_title, pad_r, "Chart1 Title")
+
+    # Left column: x=68..520 (452px safe width); Right bar track: x=540..1128 (588px)
+    bar_x = 540
+    bar_max_w = pad_r - bar_x
+    lbl_max_w = bar_x - pad_l - 22
 
     bars = [
-        ("French Drains & Vapor Liners", "$2,500 - $6,000", 0.24, (56, 189, 248), "CA Dept. of Water Resources runoff guidelines"),
-        ("20-Mil Crawlspace Encapsulation", "$4,500 - $12,500", 0.50, (34, 197, 94), "Moisture barrier + rim joist seal + dehumidifier"),
-        ("Structural Push Piers / Underpinning", "$6,000 - $25,000+", 0.92, (245, 158, 11), "CA Geological Survey expansive clay stabilization"),
-        ("Mandatory CA Contractor Bond", "$25,000 Bond Required", 0.92, (168, 85, 247), "CSLB B&P Code 7071.6 ($100k LLC extra worker bond)"),
+        ("French Drains & Vapor Liners", "$2,500 - $6,000", 0.28, (56, 189, 248), (11, 37, 69), "CA Dept. of Water Resources runoff guidelines"),
+        ("20-Mil Crawlspace Encapsulation", "$4,500 - $12,500", 0.50, (34, 197, 94), (11, 37, 69), "Moisture barrier + rim joist seal + dehumidifier"),
+        ("Structural Push Piers / Underpinning", "$6,000 - $25,000+", 0.90, (245, 158, 11), (11, 37, 69), "CA Geological Survey expansive clay stabilization"),
+        ("Mandatory CA Contractor Bond", "$25,000 Bond Required", 0.90, (168, 85, 247), (255, 255, 255), "CSLB B&P Code 7071.6 ($100k LLC extra bond)"),
     ]
 
-    y = 205
-    bar_x = 430
-    bar_max_w = 660
-    for label, val_txt, pct, col, sub in bars:
-        d.text((75, y), label, font=f_lbl, fill=(255, 255, 255))
-        d.text((75, y + 28), sub, font=f_note, fill=(148, 163, 184))
-        d.rounded_rectangle([bar_x, y + 4, bar_x + bar_max_w, y + 46], radius=8, fill=(8, 28, 54))
-        bw = int(bar_max_w * pct)
-        d.rounded_rectangle([bar_x, y + 4, bar_x + bw, y + 46], radius=8, fill=col)
-        d.text((bar_x + 16, y + 13), val_txt, font=f_val, fill=(255, 255, 255))
+    y = 198
+    for label, val_txt, pct, col, val_col, sub in bars:
+        lbl_font = _fit_font(d, label, 20, lbl_max_w, bold=True)
+        sub_font = _fit_font(d, sub, 15, lbl_max_w, bold=False)
+        _assert_fits(d, pad_l, label, lbl_font, bar_x - 16, f"Bar Label {label}")
+        _assert_fits(d, pad_l, sub, sub_font, bar_x - 16, f"Bar Sub {label}")
+
+        d.text((pad_l, y), label, font=lbl_font, fill=(255, 255, 255))
+        d.text((pad_l, y + 29), sub, font=sub_font, fill=(148, 163, 184))
+        d.rounded_rectangle([bar_x, y + 4, bar_x + bar_max_w, y + 48], radius=8, fill=(8, 28, 54))
+        bw = max(180, int(bar_max_w * pct))
+        d.rounded_rectangle([bar_x, y + 4, bar_x + bw, y + 48], radius=8, fill=col)
+        v_font = _fit_font(d, val_txt, 19, bw - 24, bold=True)
+        d.text((bar_x + 14, y + 14), val_txt, font=v_font, fill=val_col)
         y += 98
 
-    d.line([(75, h - 98), (w - 75, h - 98)], fill=(51, 85, 128), width=2)
-    d.text((75, h - 80), "Sources: California CSLB (cslb.ca.gov, B&P Code 7071.6) | CA Geological Survey (conservation.ca.gov/cgs) | CA Water Resources (water.ca.gov)", font=f_note, fill=(203, 213, 225))
-    d.text((75, h - 55), "Compiled by Foundation & Crawlspace Directory (foundationcrawlspace.online) | Verified Greater Sacramento Index", font=f_note, fill=(251, 191, 36))
+    d.line([(pad_l, h - 98), (pad_r, h - 98)], fill=(51, 85, 128), width=2)
+    src1 = "Sources: California CSLB (cslb.ca.gov, B&P Code 7071.6) | CA Geological Survey (conservation.ca.gov/cgs) | CA Water Resources (water.ca.gov)"
+    src2 = "Compiled by Foundation & Crawlspace Directory (foundationcrawlspace.online) | Verified Greater Sacramento Index"
+    f_src1 = _fit_font(d, src1, 15, max_full_w, bold=False)
+    f_src2 = _fit_font(d, src2, 15, max_full_w, bold=False)
+    d.text((pad_l, h - 80), src1, font=f_src1, fill=(203, 213, 225))
+    d.text((pad_l, h - 55), src2, font=f_src2, fill=(251, 191, 36))
     img.save(tmp_path, "JPEG", quality=95)
 
 
@@ -120,37 +159,50 @@ def draw_city_coverage_chart(tmp_path: Path, contractors: list):
     d = ImageDraw.Draw(img)
 
     d.rectangle([0, 0, w, 10], fill=(16, 185, 129))
-    d.rounded_rectangle([40, 36, w - 40, h - 36], radius=16, fill=(15, 48, 88), outline=(251, 191, 36), width=2)
-
-    f_tag = load_font(18, bold=True)
-    f_title = load_font(33, bold=True)
-    f_sub = load_font(19, bold=False)
-    f_lbl = load_font(18, bold=True)
-    f_note = load_font(16, bold=False)
+    panel_l, panel_t, panel_r, panel_b = 36, 32, w - 36, h - 32
+    pad_l = 68
+    pad_r = panel_r - 32
+    max_full_w = pad_r - pad_l
+    d.rounded_rectangle([panel_l, panel_t, panel_r, panel_b], radius=16, fill=(15, 48, 88), outline=(251, 191, 36), width=2)
 
     total_c = len(contractors)
     total_rev = sum(c.get("reviews", 0) for c in contractors)
-    d.text((75, 56), f"REGIONAL CONTRACTOR INDEX: {total_c} SPECIALISTS | {total_rev:,} VERIFIED REVIEWS", font=f_tag, fill=(52, 211, 153))
-    d.text((75, 88), "Greater Sacramento, Placer & El Dorado City Coverage Breakdown", font=f_title, fill=(255, 255, 255))
-    d.text((75, 132), "Listed foundation repair, crawlspace encapsulation, and French drain contractors by municipality", font=f_sub, fill=(203, 213, 225))
+    tag_txt = f"REGIONAL CONTRACTOR INDEX: {total_c} SPECIALISTS | {total_rev:,} VERIFIED REVIEWS"
+    title_txt = "Greater Sacramento, Placer & El Dorado City Coverage Breakdown"
+    sub_txt = "Listed foundation repair, house leveling, crawlspace encapsulation & French drain pros by city"
+
+    f_tag = _fit_font(d, tag_txt, 17, max_full_w, bold=True)
+    f_title = _fit_font(d, title_txt, 31, max_full_w, bold=True)
+    f_sub = _fit_font(d, sub_txt, 18, max_full_w, bold=False)
+    f_lbl = load_font(18, bold=True)
+
+    d.text((pad_l, 56), tag_txt, font=f_tag, fill=(52, 211, 153))
+    d.text((pad_l, 88), title_txt, font=f_title, fill=(255, 255, 255))
+    d.text((pad_l, 132), sub_txt, font=f_sub, fill=(203, 213, 225))
 
     max_cnt = max(v for _, v in top_cities) if top_cities else 1
-    y = 185
+    y = 182
     row_h = 37
-    bar_x = 310
-    bar_max_w = 720
+    bar_x = 300
+    bar_max_w = pad_r - bar_x - 90
 
     for city, cnt in top_cities:
-        d.text((75, y + 6), f"{city}, CA", font=f_lbl, fill=(255, 255, 255))
+        city_lbl = f"{city}, CA"
+        c_font = _fit_font(d, city_lbl, 18, bar_x - pad_l - 16, bold=True)
+        d.text((pad_l, y + 6), city_lbl, font=c_font, fill=(255, 255, 255))
         d.rounded_rectangle([bar_x, y + 4, bar_x + bar_max_w, y + 30], radius=6, fill=(8, 28, 54))
         bw = max(45, int((cnt / max_cnt) * bar_max_w))
         d.rounded_rectangle([bar_x, y + 4, bar_x + bw, y + 30], radius=6, fill=(14, 165, 233))
         d.text((bar_x + bw + 14, y + 5), f"{cnt} pros", font=f_lbl, fill=(251, 191, 36))
         y += row_h
 
-    d.line([(75, h - 98), (w - 75, h - 98)], fill=(51, 85, 128), width=2)
-    d.text((75, h - 80), "Sources: US Census Bureau QuickFacts (census.gov) | California CSLB Public Registry (cslb.ca.gov) | Google Maps Regional Index", font=f_note, fill=(203, 213, 225))
-    d.text((75, h - 55), "Published at https://foundationcrawlspace.online/directory/ | Companion Data PDF Available", font=f_note, fill=(52, 211, 153))
+    d.line([(pad_l, h - 98), (pad_r, h - 98)], fill=(51, 85, 128), width=2)
+    src1 = "Sources: US Census Bureau QuickFacts (census.gov) | California CSLB Public Registry (cslb.ca.gov) | Google Maps Regional Index"
+    src2 = "Published at https://foundationcrawlspace.online/directory/ | Companion Data PDF Available"
+    f_src1 = _fit_font(d, src1, 15, max_full_w, bold=False)
+    f_src2 = _fit_font(d, src2, 15, max_full_w, bold=False)
+    d.text((pad_l, h - 80), src1, font=f_src1, fill=(203, 213, 225))
+    d.text((pad_l, h - 55), src2, font=f_src2, fill=(52, 211, 153))
     img.save(tmp_path, "JPEG", quality=95)
 
 

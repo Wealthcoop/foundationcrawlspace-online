@@ -18,6 +18,7 @@
   --surface: #f5f7f9;
   --text: #27444f;
   --muted: #526973;
+  --border: #d9e2ec;
   --accent: #0b2545;
   --accent-mid: #0e4a67;
   --heading: #0b2545;
@@ -321,14 +322,44 @@ a:hover { text-decoration: underline; }
 
 .breadcrumbs { font-size: 0.88rem; color: var(--muted); margin: 1.25rem 0 0.75rem; }
 .breadcrumbs a { color: var(--muted); }
-.info-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; }
-.info-table th, .info-table td {
-  padding: 0.7rem 0.5rem;
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #ffffff;
+  margin: 0.85rem 0 0.5rem;
+}
+.info-table { width: 100%; border-collapse: collapse; margin: 0; font-size: 0.94rem; }
+.info-table thead th {
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.78rem 0.9rem;
+  border-bottom: 2px solid var(--action);
+  text-align: left;
+  width: auto;
+}
+.info-table tbody th, .info-table td {
+  padding: 0.78rem 0.9rem;
   border-bottom: 1px solid #e2e8f0;
   text-align: left;
   vertical-align: top;
 }
-.info-table th { width: 32%; color: var(--muted); font-weight: 700; font-size: 0.92rem; }
+.info-table tbody tr:nth-child(even) { background: #f8fafc; }
+.info-table tbody tr:last-child th, .info-table tbody tr:last-child td { border-bottom: 0; }
+.info-table tbody th { width: 32%; color: var(--muted); font-weight: 700; font-size: 0.92rem; }
+.direct-answer {
+  background: #f8fafc;
+  border-left: 4px solid var(--action);
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin: 0.45rem 0 1.15rem;
+  color: var(--heading);
+}
 
 .filter-bar {
   display: flex;
@@ -447,7 +478,7 @@ a:hover { text-decoration: underline; }
         <ul style='padding-left:1.15rem; margin:0 0 1rem;'><li><a href="/company/california/lincoln/lawton-construction-restoration-inc-lincoln/">Lawton Construction &amp; Restoration, Inc</a></li><li><a href="/company/california/lincoln/majestic-construction-and-design-lincoln/">Majestic Construction And Design</a></li><li><a href="/company/california/lincoln/mbj-concrete-construction-lincoln/">MBJ Concrete Construction</a></li><li><a href="/company/california/lincoln/upfront-lincoln-concrete-lincoln/">UpFront Lincoln Concrete</a></li></ul>
         <div style="display:flex; flex-wrap:wrap; gap:0.45rem;">
           <a class="btn subtle" href="/directory/california/lincoln/">All Lincoln Contractors</a>
-          <a class="btn subtle" href="/services/foundation-repair/">Foundation Repair &amp; Stabilization</a><a class="btn subtle" href="/services/house-leveling/">House Leveling</a><a class="btn subtle" href="/services/crawlspace-encapsulation/">Crawlspace Encapsulation &amp; Vapor Barriers</a><a class="btn subtle" href="/services/drainage-french-drains/">French Drains &amp; Yard Waterproofing</a>
+          <a class="btn subtle" href="/services/foundation-repair/">Foundation Repair &amp; Stabilization</a><a class="btn subtle" href="/services/house-leveling/">House Leveling</a><a class="btn subtle" href="/services/crawlspace-encapsulation/">Crawlspace Encapsulation &amp; Vapor Barriers</a><a class="btn subtle" href="/services/drainage-french-drains/">French Drain Installation &amp; Yard Drainage</a>
         </div>
       </div>
     </div>
@@ -512,7 +543,7 @@ a:hover { text-decoration: underline; }
     </div>
   </div>
   
-<div class="panel" style="margin-top: 1.5rem; overflow-x: auto;">
+<div class="panel" style="margin-top: 1.5rem;">
   <h2 style="margin-top:0;">California Foundation Cost, Soil &amp; Licensing Benchmarks</h2>
   <p style="font-size:0.9rem; color:var(--muted); margin-top:0;">
     Verified regional baselines for Greater Sacramento, Placer, and El Dorado homeowners from official state agencies.
@@ -523,37 +554,44 @@ a:hover { text-decoration: underline; }
       Chart: 2026 Greater Sacramento residential foundation repair, foam lifting, French drain, and CSLB $25,000 contractor bond cost baselines. Sources: <a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB</a>, <a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Dept. of Water Resources</a>, and <a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey</a>. Download full <a href="/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf" target="_blank" rel="noopener">2026 California Foundation &amp; CSLB Benchmark PDF</a> or view the <a href="https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026" target="_blank" rel="noopener noreferrer">Archive.org public record</a>.
     </figcaption>
   </figure>
-  <table class="info-table" style="min-width:520px;">
-    <thead>
-      <tr>
-        <th style="width:28%;">Metric / Requirement</th>
-        <th>Verified Standard / Range</th>
-        <th>Authority Source</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Contractor License Bond</strong></td>
-        <td>$25,000 mandatory bond ($100,000 extra LLC worker bond)</td>
-        <td><a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB (B&amp;P Code 7071.6)</a></td>
-      </tr>
-      <tr>
-        <td><strong>Drainage &amp; Vapor Barriers</strong></td>
-        <td>$2,500 to $6,000 typical French drain / 20-mil liner project</td>
-        <td><a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Dept. of Water Resources Drainage Context</a></td>
-      </tr>
-      <tr>
-        <td><strong>Structural Piering &amp; Encapsulation</strong></td>
-        <td>$6,000 to $25,000+ depending on clay depth and slab size</td>
-        <td><a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey Soil Hazards</a></td>
-      </tr>
-      <tr>
-        <td><strong>Regional Housing Footprint</strong></td>
-        <td>Sacramento, Placer &amp; El Dorado County residential base</td>
-        <td><a href="https://www.census.gov/quickfacts/sacramentocountycalifornia" target="_blank" rel="noopener noreferrer">US Census Bureau QuickFacts</a></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-wrap">
+    <table class="info-table">
+      <thead>
+        <tr>
+          <th style="width:28%;">Metric / Requirement</th>
+          <th>Verified Standard / Range</th>
+          <th style="width:32%;">Authority Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Contractor License Bond</strong></td>
+          <td>$25,000 mandatory bond ($100,000 extra LLC worker bond)</td>
+          <td><a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB (B&amp;P Code 7071.6)</a></td>
+        </tr>
+        <tr>
+          <td><strong>French Drains &amp; Vapor Liners</strong></td>
+          <td>$2,500 to $6,500 typical perimeter drain or 20-mil liner</td>
+          <td><a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Dept. of Water Resources Drainage Context</a></td>
+        </tr>
+        <tr>
+          <td><strong>Crawlspace Encapsulation</strong></td>
+          <td>$4,500 to $12,500 sealed 20-mil liner + dehumidifier</td>
+          <td><a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">CA Licensed B / C-39 Specialty Index</a></td>
+        </tr>
+        <tr>
+          <td><strong>Structural Push &amp; Helical Piers</strong></td>
+          <td>$6,500 to $25,000+ ($1,600 to $3,000 per steel pier)</td>
+          <td><a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey Soil Hazards</a></td>
+        </tr>
+        <tr>
+          <td><strong>Regional Housing Footprint</strong></td>
+          <td>Sacramento, Placer &amp; El Dorado County residential base</td>
+          <td><a href="https://www.census.gov/quickfacts/sacramentocountycalifornia" target="_blank" rel="noopener noreferrer">US Census Bureau QuickFacts</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 </div>

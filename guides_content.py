@@ -36,6 +36,18 @@ FOUNDATION_REPAIR_GUIDE = {
             "How Long Does Foundation Underpinning Last?",
             "Galvanized steel push piers and helical piers driven into deep load-bearing strata are engineered to last the remaining life of the structure, commonly 50 to 100+ years, and most reputable contractors back them with a transferable structural warranty."
         ),
+        (
+            "Can you fix a foundation without lifting the house?",
+            "Yes, you can stabilize a settled foundation in place using push piers, helical piers, epoxy crack injections, or perimeter drainage control without raising the structure, which prevents cracking interior drywall or stressing plumbing lines."
+        ),
+        (
+            "Can you live in a house while foundation repair is done?",
+            "Yes, most Sacramento homeowners stay in their house during foundation repair because crews work outside along the perimeter footings or inside the crawlspace for 2 to 5 days, with power and water normally shut off only briefly if needed."
+        ),
+        (
+            "What time of year is best for foundation repair?",
+            "Late summer through early fall or late spring gives the cleanest soil access around Sacramento, though steel push piers and helical piers can be installed year-round once standing storm water is pumped away from work trenches."
+        ),
     ],
     "html": """
 <article class="guide-article">
@@ -364,6 +376,157 @@ HOUSE_LEVELING_GUIDE = {
   <h3>Communities Covered Across Sacramento, Placer &amp; El Dorado Counties</h3>
   <p>
     Compare local directory profiles or request estimate callbacks across Sacramento, Folsom, Roseville, Rocklin, El Dorado Hills, Elk Grove, Citrus Heights, Granite Bay, Lincoln, Auburn, and Placerville using the city links below.
+  </p>
+</article>
+""",
+}
+
+CRAWLSPACE_ENCAPSULATION_GUIDE = {
+    "slug": "crawlspace-encapsulation",
+    "name": "Crawlspace Encapsulation & Vapor Barriers",
+    "match_token": "Crawlspace Encapsulation",
+    "title": "Crawlspace Encapsulation Sacramento: Moisture Barriers & 2026 Costs",
+    "h1": "Crawlspace Encapsulation &amp; Vapor Barrier Installation in Greater Sacramento",
+    "desc": "Crawlspace encapsulation costs in Sacramento, Folsom, and Auburn, 20-mil vapor barriers vs. basic plastic, downsides, tax credit rules, and local pros.",
+    "faqs": [
+        (
+            "How much should it cost to encapsulate a crawl space?",
+            "Full 20-mil reinforced vapor barrier encapsulation, sealed foundation vents, rim joist insulation, and a crawlspace dehumidifier in Greater Sacramento typically runs between $4,500 and $12,500 depending on square footage, clearance height, and whether a French drain or sump pump is needed first."
+        ),
+        (
+            "What is the difference between a basic black plastic liner and full crawlspace encapsulation?",
+            "A loose 6-mil black plastic sheet only covers the dirt floor loosely and still lets damp outside air leak around vents and unsealed seams, whereas full encapsulation seals 12-to-20-mil reinforced liner up masonry walls and piers with waterproof tape and mechanical fasteners."
+        ),
+        (
+            "What are the downsides of crawl space encapsulation?",
+            "The main downsides are higher upfront cost ($4,500 to $12,500) compared to laying thin 6-mil sheeting, plus ongoing electricity and filter maintenance if a dehumidifier is required and the need to fix active water leaks before sealing so water does not trap under the liner."
+        ),
+        (
+            "Is a crawl space encapsulation worth the money?",
+            "Yes, when raised-floor homes in Sacramento, Auburn, or Placerville show musty odors, damp floor joists, sagging insulation, or high wood-moisture readings above 16%, full encapsulation stops structural wood rot, protects hardwood floors, and eliminates mold-spore air rising into living rooms."
+        ),
+        (
+            "Is there a tax credit for crawl space encapsulation?",
+            "The liner alone rarely qualifies on its own, though sealed crawlspace rim-joist and subfloor air-sealing insulation upgrades can qualify for up to 30% (up to $1,200 annually) under federal Section 25C Energy Efficient Home Improvement Tax Credits when installed to Energy Star documentation rules."
+        ),
+    ],
+    "html": """
+<article class="guide-article">
+  <p style="font-size:1.06rem; font-weight:600; color:var(--heading);" class="direct-answer">
+    If your house has a raised perimeter foundation and you smell damp earth after a rainstorm or see buckled hardwood boards over your joists, open foundation vents are pulling wet soil vapor straight into your living space. Across older Sacramento bungalows, Placerville foothill crawlspaces, and Granite Bay pier-and-beam homes, sealing out ground moisture stops wood rot before floor beams drop. This guide lays out real local encapsulation costs, when a simple vapor barrier is enough versus full encapsulation, and every question homeowners ask before hiring a crew.
+  </p>
+
+  <h2>How Much Should It Cost to Encapsulate a Crawl Space?</h2>
+  <p class="direct-answer">
+    Full 20-mil reinforced crawlspace encapsulation with sealed vents, wall fastening, and a dedicated dehumidifier typically costs $4,500 to $12,500 for most 1,200 to 2,200 square foot Greater Sacramento homes. Basic unsealed 6-mil to 10-mil dirt-floor vapor barrier installations without dehumidifiers or drainage trenches usually run $1,500 to $3,800.
+  </p>
+  <p>
+    Final bids move based on three practical job-site factors: tight under-house clearance under 18 inches slows crew labor dramatically, wet soil or winter spring seepage requires an interior French drain and sealed sump basin before plastic goes down, and damaged fiberglass batts full of rodent droppings must be stripped out first.
+  </p>
+
+  <h2>What Is the Difference Between Basic Plastic Sheeting and Full Encapsulation?</h2>
+  <p class="direct-answer">
+    Loose 6-mil black poly only sits unsealed on top of damp soil while outside crawlspace vents keep blowing humid winter air across exposed subfloor joists; full encapsulation closes off the entire under-floor envelope from ground moisture and outside air.
+  </p>
+  <p>
+    On a proper full encapsulation, technicians sweep away debris, run reinforced 12-to-20-mil white antimicrobial liner across the dirt, tape every seam overlap airtight, wrap interior pier posts, pin the liner up concrete stem walls with masonry fasteners, air-seal rim joists, and control indoor air humidity below 55% with a dedicated crawlspace dehumidifier.
+  </p>
+
+  <h2>What Are the Downsides of Crawl Space Encapsulation?</h2>
+  <p class="direct-answer">
+    The biggest downsides are the $4,500 to $12,500 upfront price tag, the ongoing need to run and clean a dehumidifier filter every few months, and the risk of trapping standing water if an exterior grading or plumbing leak is not fixed before sealing.
+  </p>
+  <p>
+    Encapsulation also fails when crews cover active termite tubes or rotted sill plates without photographing wood framing first, or when pest control inspectors cannot easily check pier contact points. Reputable California contractors leave a clean termite inspection strip near the top of stem walls so WDO inspectors can still spot wood-destroying pests.
+  </p>
+
+  <h2>Is a Crawl Space Encapsulation Worth the Money?</h2>
+  <p class="direct-answer">
+    Yes, when wood-moisture readings under your home measure above 16% or winter storms pool water beneath your framing, encapsulation prevents $10,000+ subfloor joist replacement, cuts musty allergens rising into bedrooms, and stabilizes HVAC heating and cooling loads.
+  </p>
+  <p>
+    Look at the simple math: up to 40% of the air you breathe on your ground floor rises upward through your crawlspace via stack effect. If your joists are dry (under 12% moisture), a basic vapor barrier and downspout extensions may be all you need. If insulation is drooping and subfloors smell damp, full encapsulation pays for itself in framing preservation and resale inspection confidence.
+  </p>
+
+  <h2>Is There a Tax Credit for Crawl Space Encapsulation?</h2>
+  <p class="direct-answer">
+    While plastic vapor liner by itself does not qualify as an insulation credit, air-sealing and insulated foam-board upgrades along crawlspace walls and rim joists may qualify for the federal 30% Energy Efficient Home Improvement Credit (Section 25C, capped at $1,200 per year) when meeting published IECC insulation R-values.
+  </p>
+  <p>
+    Ask your contractor to break out air-sealing and closed-cell foam rim-joist insulation on your itemized invoice separately from moisture liner, and verify your company holds active state licensing and workers' compensation coverage on the <a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB lookup portal</a> before putting down a deposit. California law limits contractor down payments to 10% or $1,000, whichever is less.
+  </p>
+</article>
+""",
+}
+
+FRENCH_DRAIN_GUIDE = {
+    "slug": "drainage-french-drains",
+    "name": "French Drain Installation & Yard Drainage",
+    "match_token": "Drainage",
+    "title": "French Drain Installation Sacramento: Yard Drainage Costs & Pros",
+    "h1": "French Drain Installation &amp; Yard Drainage Contractors in Greater Sacramento",
+    "desc": "What French drain installation costs in Sacramento, Roseville, and El Dorado Hills (100 ft, 200 ft & 300 ft runs), downsides, and CSLB-vetted drainage contractors.",
+    "faqs": [
+        (
+            "How much does it cost to have someone install a French drain?",
+            "Professional exterior French drain installation in Greater Sacramento typically costs $25 to $65 per linear foot, putting most residential side-yard and perimeter footing runs between $2,500 and $6,500."
+        ),
+        (
+            "How much does a 200 ft French drain cost?",
+            "A 200-foot French drain installed around a yard perimeter or hillside slope generally costs between $5,000 and $11,000, depending on trench depth, crushed-rock tonnage, solid downspout tie-ins, and whether concrete walkways must be saw-cut or tunneled."
+        ),
+        (
+            "How much does a 300 ft French drain cost?",
+            "A 300-foot residential French drain system with multiple surface catch basins, cleanout ports, and gravity or sump discharge commonly runs $7,500 to $16,500 on sloped Placer or El Dorado lots."
+        ),
+        (
+            "What are the downsides of a French drain?",
+            "French drains lose flow if installed without woven geotextile filter fabric (allowing Sacramento clay silt to pack the gravel trench), lack vertical cleanout ports for camera/jetting maintenance, or fail to maintain at least a 1% downhill slope toward discharge."
+        ),
+        (
+            "How far should a French drain discharge away from a Sacramento foundation?",
+            "Downspouts and perimeter French drains should discharge collected storm water at least 10 feet downhill from your slab or footing, or safely into a curb pop-up / approved municipal storm tie-in without flooding a neighbor's property."
+        ),
+    ],
+    "html": """
+<article class="guide-article">
+  <p style="font-size:1.06rem; font-weight:600; color:var(--heading);" class="direct-answer">
+    Most residential foundation settlement around Roseville, Folsom, El Dorado Hills, and Elk Grove starts with standing storm water soaking expansive clay soil right next to your footings. Before paying $20,000 to drive deep steel piers under a sinking exterior wall, controlling roof downspouts and hillside groundwater with properly sloped French drains and surface catch basins solves the root moisture problem cleanly.
+  </p>
+
+  <h2>How Much Does It Cost to Have Someone Install a French Drain?</h2>
+  <p class="direct-answer">
+    Hiring a licensed drainage crew in Greater Sacramento typically runs $25 to $65 per linear foot installed, making most 60-to-120-foot side-yard or rear patio foundation perimeter runs cost between $2,500 and $6,500.
+  </p>
+  <p>
+    Light shallow gravel trenches built with 4-inch SDR-35 rigid PVC pipe and woven filter fabric sit at the lower end of that range, while deep 24-to-36-inch interceptor drains dug into hard foothill decomposed granite in Auburn, Folsom, or Rocklin sit higher due to excavation time and dump fees.
+  </p>
+
+  <h2>How Much Does a 200 ft or 300 ft French Drain Cost?</h2>
+  <p class="direct-answer">
+    Expect a full 200-foot French drain run with downspout tie-ins and catch basins to run $5,000 to $11,000, while a 300-foot full-lot perimeter system typically runs $7,500 to $16,500 across Sacramento, Placer, and El Dorado counties.
+  </p>
+  <p>
+    Three details push big systems up or down on price:
+    <strong>1) Trench Depth &amp; Soil Hardness:</strong> Soft valley loam digs twice as fast as hard-pan clay or foothill rock.
+    <strong>2) Pipe Material:</strong> Rigid schedule/SDR-35 smooth-wall perforated pipe resists crushing and flows cleaner than cheap black corrugated flex tubing from a big-box hardware aisle.
+    <strong>3) Discharge Method:</strong> Natural gravity slope to a street curb pop-up emitter costs far less than installing a below-grade sump pump basin and dedicated GFCI circuit on a completely flat Elk Grove lot.
+  </p>
+
+  <h2>What Are the Downsides of a French Drain?</h2>
+  <p class="direct-answer">
+    The biggest downsides of a poorly built French drain are clay-silt clogging when crews skip proper woven filter fabric, crushed pipe sections from thin corrugated plastic, and standing water sitting in trenches dug flat with zero laser slope.
+  </p>
+  <p>
+    Tree roots from mature oaks, redwoods, and liquidambars around Citrus Heights and Sacramento can also seek perforated pipe moisture over 5 to 10 years unless cleanouts are installed at corners so the line can be flushed out periodically. Never hook muddy roof-gutter runoff directly into a perforated gravel trench; run solid smooth PVC for roof downspouts and keep perforated pipe wrapped neatly in fabric.
+  </p>
+
+  <h2>How Far Should a French Drain Discharge Away From a Foundation?</h2>
+  <p class="direct-answer">
+    Storm runoff from roof downspouts and perimeter French drains should exit at least 10 feet downhill away from your foundation stem wall, or discharge via solid-wall PVC pipe to a street curb, drainage swale, or approved storm inlet.
+  </p>
+  <p>
+    Look up runoff and floodplain guidelines through the <a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">California Department of Water Resources</a> and check active contractor licensing before digging near gas or sewer utility trenches (always confirm USA North 811 utility marking first). Comparing two itemized bids showing exact trench depth, pipe spec, rock type, and cleanout locations stops contractors from cutting corners underground where you cannot see it.
   </p>
 </article>
 """,

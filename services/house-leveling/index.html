@@ -18,6 +18,7 @@
   --surface: #f5f7f9;
   --text: #27444f;
   --muted: #526973;
+  --border: #d9e2ec;
   --accent: #0b2545;
   --accent-mid: #0e4a67;
   --heading: #0b2545;
@@ -321,14 +322,44 @@ a:hover { text-decoration: underline; }
 
 .breadcrumbs { font-size: 0.88rem; color: var(--muted); margin: 1.25rem 0 0.75rem; }
 .breadcrumbs a { color: var(--muted); }
-.info-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; }
-.info-table th, .info-table td {
-  padding: 0.7rem 0.5rem;
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #ffffff;
+  margin: 0.85rem 0 0.5rem;
+}
+.info-table { width: 100%; border-collapse: collapse; margin: 0; font-size: 0.94rem; }
+.info-table thead th {
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.78rem 0.9rem;
+  border-bottom: 2px solid var(--action);
+  text-align: left;
+  width: auto;
+}
+.info-table tbody th, .info-table td {
+  padding: 0.78rem 0.9rem;
   border-bottom: 1px solid #e2e8f0;
   text-align: left;
   vertical-align: top;
 }
-.info-table th { width: 32%; color: var(--muted); font-weight: 700; font-size: 0.92rem; }
+.info-table tbody tr:nth-child(even) { background: #f8fafc; }
+.info-table tbody tr:last-child th, .info-table tbody tr:last-child td { border-bottom: 0; }
+.info-table tbody th { width: 32%; color: var(--muted); font-weight: 700; font-size: 0.92rem; }
+.direct-answer {
+  background: #f8fafc;
+  border-left: 4px solid var(--action);
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin: 0.45rem 0 1.15rem;
+  color: var(--heading);
+}
 
 .filter-bar {
   display: flex;
@@ -395,7 +426,7 @@ a:hover { text-decoration: underline; }
   .dir-search button { border-radius: 10px; }
 }
 </style>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://foundationcrawlspace.online/"}, {"@type": "ListItem", "position": 2, "name": "Directory", "item": "https://foundationcrawlspace.online/directory/"}, {"@type": "ListItem", "position": 3, "name": "House Leveling", "item": "https://foundationcrawlspace.online/services/house-leveling/"}]}, {"@type": "ItemList", "name": "House Leveling Sacramento: Slab & Pier-and-Beam Cost Guide", "numberOfItems": 6, "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Mesa Anchor Foundation Repair", "url": "https://foundationcrawlspace.online/company/california/folsom/mesa-anchor-foundation-repair-folsom/"}, {"@type": "ListItem", "position": 2, "name": "Blue Oak Foundation Repair", "url": "https://foundationcrawlspace.online/company/california/roseville/blue-oak-foundation-repair-roseville/"}, {"@type": "ListItem", "position": 3, "name": "Groundworks Foundation Repair Sacramento", "url": "https://foundationcrawlspace.online/company/california/sacramento/groundworks-foundation-repair-sacramento-sacramento/"}, {"@type": "ListItem", "position": 4, "name": "Stronghold Foundation Repair", "url": "https://foundationcrawlspace.online/company/california/sacramento/stronghold-foundation-repair-sacramento/"}, {"@type": "ListItem", "position": 5, "name": "Blue Iron Foundations & Shoring, LLC", "url": "https://foundationcrawlspace.online/company/california/sacramento/blue-iron-foundations-shoring-llc-sacramento/"}, {"@type": "ListItem", "position": 6, "name": "Stabilvera Foundation Repair", "url": "https://foundationcrawlspace.online/company/california/sacramento/stabilvera-foundation-repair-sacramento/"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What Is House Leveling and When Is It Necessary?", "acceptedAnswer": {"@type": "Answer", "text": "House leveling uses hydraulic jacks, steel shims, foam injection, or deep piers to raise sunken floors back toward flat. It becomes necessary when sloping exceeds roughly 1 inch over 10 feet, doors refuse to stay latched, or framing beams visibly sag."}}, {"@type": "Question", "name": "Is It Safe to Live in a House That Needs Leveling?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, in the vast majority of settled Sacramento and foothill homes it is safe to stay inside during minor-to-moderate sloping, unless foundation walls are actively crumbling, gas lines strain against framing, or floor joists are severely rotted."}}, {"@type": "Question", "name": "How Much Does It Cost to Level a House in Sacramento & Placer County?", "acceptedAnswer": {"@type": "Answer", "text": "Minor pier-and-beam re-shimming inside an accessible crawlspace runs $2,500 to $6,500, polyurethane foam slab lifting costs $1,500 to $4,500 for settled patios/garages or interior pockets, and full deep-pier structural house leveling ranges from $8,000 to $25,000+."}}, {"@type": "Question", "name": "Can House Leveling Cause Damage to My Home?", "acceptedAnswer": {"@type": "Answer", "text": "Lifting a settled frame quickly by more than 1 to 2 inches can stress rigid plumbing drains, pop ceramic tiles, and open hairline drywall cracks at door headers. Skilled leveling crews lift slowly in small stages across multiple jack points and pressure-test drain lines afterward."}}, {"@type": "Question", "name": "How Long Does It Take to Level a House?", "acceptedAnswer": {"@type": "Answer", "text": "Most single-family pier-and-beam shimming jobs finish in 1 to 2 days, while deep-pier underpinning lifts on slab homes typically take 3 to 5 days including excavation, permits, controlled jacking, and backfill."}}]}, {"@type": "Article", "headline": "House Leveling Sacramento: Slab & Pier-and-Beam Cost Guide", "description": "What house leveling costs in Sacramento, Folsom, and Auburn, pier-and-beam shimming vs. slab foam lifting, pipe protection during lifts, and vetting quotes.", "mainEntityOfPage": "https://foundationcrawlspace.online/services/house-leveling/", "datePublished": "2026-11-18", "dateModified": "2026-11-18", "author": {"@type": "Person", "name": "Molly Perkins", "url": "https://www.facebook.com/mollyperkins354", "sameAs": ["https://www.facebook.com/mollyperkins354", "https://aine.ws/authors/molly-perkins"]}, "publisher": {"@type": "Organization", "name": "Gold Standard Assets LLC", "url": "https://www.gslocalseo.com/"}}, {"@type": "WebPage", "name": "House Leveling Sacramento: Slab & Pier-and-Beam Cost Guide", "url": "https://foundationcrawlspace.online/services/house-leveling/", "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["h1", ".direct-answer", ".panel p", ".guide-article p"]}, "primaryImageOfPage": {"@id": "https://foundationcrawlspace.online/assets/sacramento-foundation-repair-cost-cslb-benchmarks.jpg#image"}}, {"@type": "ImageObject", "@id": "https://foundationcrawlspace.online/assets/sacramento-foundation-repair-cost-cslb-benchmarks.jpg#image", "url": "https://foundationcrawlspace.online/assets/sacramento-foundation-repair-cost-cslb-benchmarks.jpg", "contentUrl": "https://foundationcrawlspace.online/assets/sacramento-foundation-repair-cost-cslb-benchmarks.jpg", "caption": "Sacramento foundation repair cost, crawlspace encapsulation pricing, and CSLB licensing benchmark chart", "width": 1200, "height": 700, "representativeOfPage": true, "creator": {"@type": "Person", "name": "Molly Perkins"}, "copyrightHolder": {"@type": "Organization", "name": "Gold Standard Assets LLC"}}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://foundationcrawlspace.online/"}, {"@type": "ListItem", "position": 2, "name": "Directory", "item": "https://foundationcrawlspace.online/directory/"}, {"@type": "ListItem", "position": 3, "name": "House Leveling", "item": "https://foundationcrawlspace.online/services/house-leveling/"}]}, {"@type": "ItemList", "name": "House Leveling Sacramento: Slab & Pier-and-Beam Cost Guide", "numberOfItems": 6, "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Mesa Anchor Foundation Repair", "url": "https://foundationcrawlspace.online/company/california/folsom/mesa-anchor-foundation-repair-folsom/"}, {"@type": "ListItem", "position": 2, "name": "Blue Oak Foundation Repair", "url": "https://foundationcrawlspace.online/company/california/roseville/blue-oak-foundation-repair-roseville/"}, {"@type": "ListItem", "position": 3, "name": "Groundworks Foundation Repair Sacramento", "url": "https://foundationcrawlspace.online/company/california/sacramento/groundworks-foundation-repair-sacramento-sacramento/"}, {"@type": "ListItem", "position": 4, "name": "Stronghold Foundation Repair", "url": "https://foundationcrawlspace.online/company/california/sacramento/stronghold-foundation-repair-sacramento/"}, {"@type": "ListItem", "position": 5, "name": "Blue Iron Foundations & Shoring, LLC", "url": "https://foundationcrawlspace.online/company/california/sacramento/blue-iron-foundations-shoring-llc-sacramento/"}, {"@type": "ListItem", "position": 6, "name": "Stabilvera Foundation Repair", "url": "https://foundationcrawlspace.online/company/california/sacramento/stabilvera-foundation-repair-sacramento/"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What Is House Leveling and When Is It Necessary?", "acceptedAnswer": {"@type": "Answer", "text": "House leveling uses hydraulic jacks, steel shims, foam injection, or deep piers to raise sunken floors back toward flat. It becomes necessary when sloping exceeds roughly 1 inch over 10 feet, doors refuse to stay latched, or framing beams visibly sag."}}, {"@type": "Question", "name": "Is It Safe to Live in a House That Needs Leveling?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, in the vast majority of settled Sacramento and foothill homes it is safe to stay inside during minor-to-moderate sloping, unless foundation walls are actively crumbling, gas lines strain against framing, or floor joists are severely rotted."}}, {"@type": "Question", "name": "How Much Does It Cost to Level a House in Sacramento & Placer County?", "acceptedAnswer": {"@type": "Answer", "text": "Minor pier-and-beam re-shimming inside an accessible crawlspace runs $2,500 to $6,500, polyurethane foam slab lifting costs $1,500 to $4,500 for settled patios/garages or interior pockets, and full deep-pier structural house leveling ranges from $8,000 to $25,000+."}}, {"@type": "Question", "name": "Can House Leveling Cause Damage to My Home?", "acceptedAnswer": {"@type": "Answer", "text": "Lifting a settled frame quickly by more than 1 to 2 inches can stress rigid plumbing drains, pop ceramic tiles, and open hairline drywall cracks at door headers. Skilled leveling crews lift slowly in small stages across multiple jack points and pressure-test drain lines afterward."}}, {"@type": "Question", "name": "How Long Does It Take to Level a House?", "acceptedAnswer": {"@type": "Answer", "text": "Most single-family pier-and-beam shimming jobs finish in 1 to 2 days, while deep-pier underpinning lifts on slab homes typically take 3 to 5 days including excavation, permits, controlled jacking, and backfill."}}]}, {"@type": "Article", "headline": "House Leveling Sacramento: Slab & Pier-and-Beam Cost Guide", "description": "What house leveling costs in Sacramento, Folsom, and Auburn, pier-and-beam shimming vs. slab foam lifting, pipe protection during lifts, and vetting quotes.", "mainEntityOfPage": "https://foundationcrawlspace.online/services/house-leveling/", "datePublished": "2026-11-21", "dateModified": "2026-11-21", "author": {"@type": "Person", "name": "Molly Perkins", "url": "https://www.facebook.com/mollyperkins354", "sameAs": ["https://www.facebook.com/mollyperkins354", "https://aine.ws/authors/molly-perkins"]}, "publisher": {"@type": "Organization", "name": "Gold Standard Assets LLC", "url": "https://www.gslocalseo.com/"}}, {"@type": "WebPage", "name": "House Leveling Sacramento: Slab & Pier-and-Beam Cost Guide", "url": "https://foundationcrawlspace.online/services/house-leveling/", "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["h1", ".direct-answer", ".panel p", ".guide-article p"]}, "primaryImageOfPage": {"@id": "https://foundationcrawlspace.online/assets/sacramento-foundation-repair-cost-cslb-benchmarks.jpg#image"}}, {"@type": "ImageObject", "@id": "https://foundationcrawlspace.online/assets/sacramento-foundation-repair-cost-cslb-benchmarks.jpg#image", "url": "https://foundationcrawlspace.online/assets/sacramento-foundation-repair-cost-cslb-benchmarks.jpg", "contentUrl": "https://foundationcrawlspace.online/assets/sacramento-foundation-repair-cost-cslb-benchmarks.jpg", "caption": "Sacramento foundation repair cost, crawlspace encapsulation pricing, and CSLB licensing benchmark chart", "width": 1200, "height": 700, "representativeOfPage": true, "creator": {"@type": "Person", "name": "Molly Perkins"}, "copyrightHolder": {"@type": "Organization", "name": "Gold Standard Assets LLC"}}]}</script>
 </head>
 <body>
 
@@ -417,7 +448,7 @@ a:hover { text-decoration: underline; }
 <div class="wrap">
   <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; <a href="/directory/">Directory</a> &rsaquo; House Leveling</div>
   <h1>House Leveling Services in Greater Sacramento: Slab &amp; Pier-and-Beam Leveling Cost &amp; Process</h1>
-  <p style="font-size:0.92rem; color:var(--muted); margin-top:0;">By <a href="https://www.facebook.com/mollyperkins354" target="_blank" rel="noopener author"><strong>Molly Perkins</strong></a> &middot; Updated 2026-11-18</p>
+  <p style="font-size:0.92rem; color:var(--muted); margin-top:0;">By <a href="https://www.facebook.com/mollyperkins354" target="_blank" rel="noopener author"><strong>Molly Perkins</strong></a> &middot; Updated 2026-11-21</p>
 
   <div class="two-col">
     <div>
@@ -686,7 +717,7 @@ a:hover { text-decoration: underline; }
 </article>
 </div>
       
-<div class="panel" style="margin-top: 1.5rem; overflow-x: auto;">
+<div class="panel" style="margin-top: 1.5rem;">
   <h2 style="margin-top:0;">California Foundation Cost, Soil &amp; Licensing Benchmarks</h2>
   <p style="font-size:0.9rem; color:var(--muted); margin-top:0;">
     Verified regional baselines for Greater Sacramento, Placer, and El Dorado homeowners from official state agencies.
@@ -697,37 +728,44 @@ a:hover { text-decoration: underline; }
       Chart: 2026 Greater Sacramento residential foundation repair, foam lifting, French drain, and CSLB $25,000 contractor bond cost baselines. Sources: <a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB</a>, <a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Dept. of Water Resources</a>, and <a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey</a>. Download full <a href="/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf" target="_blank" rel="noopener">2026 California Foundation &amp; CSLB Benchmark PDF</a> or view the <a href="https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026" target="_blank" rel="noopener noreferrer">Archive.org public record</a>.
     </figcaption>
   </figure>
-  <table class="info-table" style="min-width:520px;">
-    <thead>
-      <tr>
-        <th style="width:28%;">Metric / Requirement</th>
-        <th>Verified Standard / Range</th>
-        <th>Authority Source</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Contractor License Bond</strong></td>
-        <td>$25,000 mandatory bond ($100,000 extra LLC worker bond)</td>
-        <td><a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB (B&amp;P Code 7071.6)</a></td>
-      </tr>
-      <tr>
-        <td><strong>Drainage &amp; Vapor Barriers</strong></td>
-        <td>$2,500 to $6,000 typical French drain / 20-mil liner project</td>
-        <td><a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Dept. of Water Resources Drainage Context</a></td>
-      </tr>
-      <tr>
-        <td><strong>Structural Piering &amp; Encapsulation</strong></td>
-        <td>$6,000 to $25,000+ depending on clay depth and slab size</td>
-        <td><a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey Soil Hazards</a></td>
-      </tr>
-      <tr>
-        <td><strong>Regional Housing Footprint</strong></td>
-        <td>Sacramento, Placer &amp; El Dorado County residential base</td>
-        <td><a href="https://www.census.gov/quickfacts/sacramentocountycalifornia" target="_blank" rel="noopener noreferrer">US Census Bureau QuickFacts</a></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-wrap">
+    <table class="info-table">
+      <thead>
+        <tr>
+          <th style="width:28%;">Metric / Requirement</th>
+          <th>Verified Standard / Range</th>
+          <th style="width:32%;">Authority Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Contractor License Bond</strong></td>
+          <td>$25,000 mandatory bond ($100,000 extra LLC worker bond)</td>
+          <td><a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB (B&amp;P Code 7071.6)</a></td>
+        </tr>
+        <tr>
+          <td><strong>French Drains &amp; Vapor Liners</strong></td>
+          <td>$2,500 to $6,500 typical perimeter drain or 20-mil liner</td>
+          <td><a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Dept. of Water Resources Drainage Context</a></td>
+        </tr>
+        <tr>
+          <td><strong>Crawlspace Encapsulation</strong></td>
+          <td>$4,500 to $12,500 sealed 20-mil liner + dehumidifier</td>
+          <td><a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">CA Licensed B / C-39 Specialty Index</a></td>
+        </tr>
+        <tr>
+          <td><strong>Structural Push &amp; Helical Piers</strong></td>
+          <td>$6,500 to $25,000+ ($1,600 to $3,000 per steel pier)</td>
+          <td><a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey Soil Hazards</a></td>
+        </tr>
+        <tr>
+          <td><strong>Regional Housing Footprint</strong></td>
+          <td>Sacramento, Placer &amp; El Dorado County residential base</td>
+          <td><a href="https://www.census.gov/quickfacts/sacramentocountycalifornia" target="_blank" rel="noopener noreferrer">US Census Bureau QuickFacts</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
     </div>
@@ -781,7 +819,7 @@ a:hover { text-decoration: underline; }
 
       <div class="panel" style="margin-top:1.25rem;">
         <h3 style="margin-top:0;">Related Buying Guides</h3>
-        <div style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom:1.1rem;"><a class="btn subtle" href="/services/foundation-repair/">Foundation Repair &amp; Stabilization</a><a class="btn subtle" href="/services/crawlspace-encapsulation/">Crawlspace Encapsulation &amp; Vapor Barriers</a><a class="btn subtle" href="/services/drainage-french-drains/">French Drains &amp; Yard Waterproofing</a></div>
+        <div style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom:1.1rem;"><a class="btn subtle" href="/services/foundation-repair/">Foundation Repair &amp; Stabilization</a><a class="btn subtle" href="/services/crawlspace-encapsulation/">Crawlspace Encapsulation &amp; Vapor Barriers</a><a class="btn subtle" href="/services/drainage-french-drains/">French Drain Installation &amp; Yard Drainage</a></div>
         <h3 style="margin-top:0;">Browse By City</h3>
         <div style="display:flex; flex-wrap:wrap; gap:0.45rem;"><a class="btn subtle" href="/directory/california/sacramento/">Sacramento</a><a class="btn subtle" href="/directory/california/roseville/">Roseville</a><a class="btn subtle" href="/directory/california/el-dorado-hills/">El Dorado Hills</a><a class="btn subtle" href="/directory/california/placerville/">Placerville</a><a class="btn subtle" href="/directory/california/citrus-heights/">Citrus Heights</a><a class="btn subtle" href="/directory/california/folsom/">Folsom</a><a class="btn subtle" href="/directory/california/auburn/">Auburn</a><a class="btn subtle" href="/directory/california/lincoln/">Lincoln</a><a class="btn subtle" href="/directory/california/rocklin/">Rocklin</a><a class="btn subtle" href="/directory/california/granite-bay/">Granite Bay</a><a class="btn subtle" href="/directory/california/elk-grove/">Elk Grove</a></div>
       </div>

@@ -18,6 +18,7 @@
   --surface: #f5f7f9;
   --text: #27444f;
   --muted: #526973;
+  --border: #d9e2ec;
   --accent: #0b2545;
   --accent-mid: #0e4a67;
   --heading: #0b2545;
@@ -321,14 +322,44 @@ a:hover { text-decoration: underline; }
 
 .breadcrumbs { font-size: 0.88rem; color: var(--muted); margin: 1.25rem 0 0.75rem; }
 .breadcrumbs a { color: var(--muted); }
-.info-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; }
-.info-table th, .info-table td {
-  padding: 0.7rem 0.5rem;
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #ffffff;
+  margin: 0.85rem 0 0.5rem;
+}
+.info-table { width: 100%; border-collapse: collapse; margin: 0; font-size: 0.94rem; }
+.info-table thead th {
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.78rem 0.9rem;
+  border-bottom: 2px solid var(--action);
+  text-align: left;
+  width: auto;
+}
+.info-table tbody th, .info-table td {
+  padding: 0.78rem 0.9rem;
   border-bottom: 1px solid #e2e8f0;
   text-align: left;
   vertical-align: top;
 }
-.info-table th { width: 32%; color: var(--muted); font-weight: 700; font-size: 0.92rem; }
+.info-table tbody tr:nth-child(even) { background: #f8fafc; }
+.info-table tbody tr:last-child th, .info-table tbody tr:last-child td { border-bottom: 0; }
+.info-table tbody th { width: 32%; color: var(--muted); font-weight: 700; font-size: 0.92rem; }
+.direct-answer {
+  background: #f8fafc;
+  border-left: 4px solid var(--action);
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin: 0.45rem 0 1.15rem;
+  color: var(--heading);
+}
 
 .filter-bar {
   display: flex;
@@ -457,7 +488,7 @@ a:hover { text-decoration: underline; }
   </div>
 
   <div style="max-width: 780px; margin-top: 2rem;">
-    <div class="panel" style="overflow-x:auto;">
+    <div class="panel">
       <h2 style="margin-top:0;">Directory Tier Comparison: Free Listing vs. $49/mo Spotlight vs. $149/mo Exclusive</h2>
       <figure style="margin:0 0 1.25rem; padding:0.75rem; border:1px solid var(--border); border-radius:8px; background:#fff;">
         <img src="/assets/greater-sacramento-contractor-coverage-tiers.jpg" alt="Greater Sacramento, Placer, and El Dorado County foundation and drainage contractor coverage breakdown chart" width="1200" height="700" loading="lazy" style="width:100%; height:auto; display:block; border-radius:6px;" />
@@ -465,16 +496,18 @@ a:hover { text-decoration: underline; }
           Chart: Regional contractor distribution across Greater Sacramento, Placer, and El Dorado cities. Sources: <a href="https://www.cslb.ca.gov/" target="_blank" rel="noopener noreferrer">California CSLB</a> &amp; <a href="https://www.census.gov/quickfacts/sacramentocountycalifornia" target="_blank" rel="noopener noreferrer">US Census QuickFacts</a> | <a href="/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf" target="_blank" rel="noopener">Companion Benchmark PDF</a> | <a href="https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026" target="_blank" rel="noopener noreferrer">Archive.org Mirror</a>.
         </figcaption>
       </figure>
-      <table class="info-table" style="min-width:520px;">
-        <thead>
-          <tr><th>Plan Tier</th><th>Monthly Cost</th><th>Placement &amp; Lead Scope</th><th>Territory Exclusivity</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Verified Public Profile</strong></td><td>$0 / mo</td><td>Standard city directory listing with verified phone &amp; CSLB badge</td><td>None (shared city page)</td></tr>
-          <tr><td><strong>City Spotlight Listing</strong></td><td>$49 / mo</td><td>Pinned #1 card above regular contractors in 1 city</td><td>1 Spotlight slot per city</td></tr>
-          <tr><td><strong>Exclusive City Lead Partner</strong></td><td>$149 / mo</td><td>Top placement in up to 3 cities + direct homeowner call/form routing</td><td>Exclusive lead routing per city</td></tr>
-        </tbody>
-      </table>
+      <div class="table-wrap">
+        <table class="info-table">
+          <thead>
+            <tr><th>Plan Tier</th><th>Monthly Cost</th><th>Placement &amp; Lead Scope</th><th>Territory Exclusivity</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Verified Public Profile</strong></td><td>$0 / mo</td><td>Standard city directory listing with verified phone &amp; CSLB badge</td><td>None (shared city page)</td></tr>
+            <tr><td><strong>City Spotlight Listing</strong></td><td>$49 / mo</td><td>Pinned #1 card above regular contractors in 1 city</td><td>1 Spotlight slot per city</td></tr>
+            <tr><td><strong>Exclusive City Lead Partner</strong></td><td>$149 / mo</td><td>Top placement in up to 3 cities + direct homeowner call/form routing</td><td>Exclusive lead routing per city</td></tr>
+          </tbody>
+        </table>
+      </div>
       <p style="font-size:0.86rem; color:var(--muted); margin-bottom:0;">
         Verification reference: California contractor license requirements via <a href="https://www.cslb.ca.gov/" target="_blank" rel="noopener noreferrer">California CSLB</a>.
       </p>

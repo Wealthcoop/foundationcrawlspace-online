@@ -11,7 +11,12 @@ import shutil
 import urllib.parse
 from datetime import date
 from pathlib import Path
-from guides_content import FOUNDATION_REPAIR_GUIDE, HOUSE_LEVELING_GUIDE
+from guides_content import (
+    CRAWLSPACE_ENCAPSULATION_GUIDE,
+    FOUNDATION_REPAIR_GUIDE,
+    FRENCH_DRAIN_GUIDE,
+    HOUSE_LEVELING_GUIDE,
+)
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "contractors_data.json"
@@ -73,28 +78,8 @@ CITY_LOCAL_NOTES = {
 SERVICE_SILOS = [
     FOUNDATION_REPAIR_GUIDE,
     HOUSE_LEVELING_GUIDE,
-    {
-        "slug": "crawlspace-encapsulation",
-        "name": "Crawlspace Encapsulation & Vapor Barriers",
-        "match_token": "Crawlspace Encapsulation",
-        "title": "Best Crawlspace Encapsulation & Waterproofing Sacramento",
-        "h1": "Best Crawlspace Encapsulation &amp; Vapor Barrier Contractors in Greater Sacramento",
-        "desc": "Find local Sacramento, Folsom, Auburn, and Placerville crawlspace waterproofing specialists for vapor barriers, sump pumps, and wood-rot prevention.",
-        "intro": "Standing water and damp soil under raised floors trigger mold odors, warped hardwood floors, and pest activity before showing up in home-sale inspections. Compare local pros installing heavy-mil vapor barriers, sealed sump basins, and perimeter drainage.",
-        "faq_q": "What is the difference between a basic black plastic liner and full crawlspace encapsulation?",
-        "faq_a": "A loose 6-mil plastic sheet still lets humid soil air circulate around vents and overlap seams, whereas full encapsulation seals seams with 12-to-20-mil reinforced liner, closes foundation vents, and pairs with drainage or a dehumidifier.",
-    },
-    {
-        "slug": "drainage-french-drains",
-        "name": "French Drains & Yard Waterproofing",
-        "match_token": "Drainage",
-        "title": "Best French Drain & Yard Drainage Contractors Sacramento",
-        "h1": "Best French Drain &amp; Yard Drainage Contractors in Greater Sacramento",
-        "desc": "Compare Greater Sacramento, El Dorado Hills, and Roseville French drain, catch basin, grading, and sump pump drainage specialists.",
-        "intro": "Water pooling against your foundation slab or running down a hillside lot causes hydrostatic cracks and flooded crawlspaces every winter storm. Compare local drainage crews building perforated French drains, surface catch basins, swales, and sump discharge lines.",
-        "faq_q": "How far should a French drain discharge away from a Sacramento foundation?",
-        "faq_a": "Downspouts and perimeter French drains should discharge water at least 10 feet downhill from footings or safely to a street curb/storm drain with proper slope and cleanout ports so silt cannot clog the pipe.",
-    },
+    CRAWLSPACE_ENCAPSULATION_GUIDE,
+    FRENCH_DRAIN_GUIDE,
 ]
 
 COMMON_CSS = """
@@ -103,6 +88,7 @@ COMMON_CSS = """
   --surface: #f5f7f9;
   --text: #27444f;
   --muted: #526973;
+  --border: #d9e2ec;
   --accent: #0b2545;
   --accent-mid: #0e4a67;
   --heading: #0b2545;
@@ -406,14 +392,44 @@ a:hover { text-decoration: underline; }
 
 .breadcrumbs { font-size: 0.88rem; color: var(--muted); margin: 1.25rem 0 0.75rem; }
 .breadcrumbs a { color: var(--muted); }
-.info-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; }
-.info-table th, .info-table td {
-  padding: 0.7rem 0.5rem;
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #ffffff;
+  margin: 0.85rem 0 0.5rem;
+}
+.info-table { width: 100%; border-collapse: collapse; margin: 0; font-size: 0.94rem; }
+.info-table thead th {
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.78rem 0.9rem;
+  border-bottom: 2px solid var(--action);
+  text-align: left;
+  width: auto;
+}
+.info-table tbody th, .info-table td {
+  padding: 0.78rem 0.9rem;
   border-bottom: 1px solid #e2e8f0;
   text-align: left;
   vertical-align: top;
 }
-.info-table th { width: 32%; color: var(--muted); font-weight: 700; font-size: 0.92rem; }
+.info-table tbody tr:nth-child(even) { background: #f8fafc; }
+.info-table tbody tr:last-child th, .info-table tbody tr:last-child td { border-bottom: 0; }
+.info-table tbody th { width: 32%; color: var(--muted); font-weight: 700; font-size: 0.92rem; }
+.direct-answer {
+  background: #f8fafc;
+  border-left: 4px solid var(--action);
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin: 0.45rem 0 1.15rem;
+  color: var(--heading);
+}
 
 .filter-bar {
   display: flex;
@@ -572,7 +588,7 @@ def render_header() -> str:
 
 
 AUTHORITY_BENCHMARK_TABLE = """
-<div class="panel" style="margin-top: 1.5rem; overflow-x: auto;">
+<div class="panel" style="margin-top: 1.5rem;">
   <h2 style="margin-top:0;">California Foundation Cost, Soil &amp; Licensing Benchmarks</h2>
   <p style="font-size:0.9rem; color:var(--muted); margin-top:0;">
     Verified regional baselines for Greater Sacramento, Placer, and El Dorado homeowners from official state agencies.
@@ -583,37 +599,44 @@ AUTHORITY_BENCHMARK_TABLE = """
       Chart: 2026 Greater Sacramento residential foundation repair, foam lifting, French drain, and CSLB $25,000 contractor bond cost baselines. Sources: <a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB</a>, <a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Dept. of Water Resources</a>, and <a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey</a>. Download full <a href="/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf" target="_blank" rel="noopener">2026 California Foundation &amp; CSLB Benchmark PDF</a> or view the <a href="https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026" target="_blank" rel="noopener noreferrer">Archive.org public record</a>.
     </figcaption>
   </figure>
-  <table class="info-table" style="min-width:520px;">
-    <thead>
-      <tr>
-        <th style="width:28%;">Metric / Requirement</th>
-        <th>Verified Standard / Range</th>
-        <th>Authority Source</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Contractor License Bond</strong></td>
-        <td>$25,000 mandatory bond ($100,000 extra LLC worker bond)</td>
-        <td><a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB (B&amp;P Code 7071.6)</a></td>
-      </tr>
-      <tr>
-        <td><strong>Drainage &amp; Vapor Barriers</strong></td>
-        <td>$2,500 to $6,000 typical French drain / 20-mil liner project</td>
-        <td><a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Dept. of Water Resources Drainage Context</a></td>
-      </tr>
-      <tr>
-        <td><strong>Structural Piering &amp; Encapsulation</strong></td>
-        <td>$6,000 to $25,000+ depending on clay depth and slab size</td>
-        <td><a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey Soil Hazards</a></td>
-      </tr>
-      <tr>
-        <td><strong>Regional Housing Footprint</strong></td>
-        <td>Sacramento, Placer &amp; El Dorado County residential base</td>
-        <td><a href="https://www.census.gov/quickfacts/sacramentocountycalifornia" target="_blank" rel="noopener noreferrer">US Census Bureau QuickFacts</a></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-wrap">
+    <table class="info-table">
+      <thead>
+        <tr>
+          <th style="width:28%;">Metric / Requirement</th>
+          <th>Verified Standard / Range</th>
+          <th style="width:32%;">Authority Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Contractor License Bond</strong></td>
+          <td>$25,000 mandatory bond ($100,000 extra LLC worker bond)</td>
+          <td><a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB (B&amp;P Code 7071.6)</a></td>
+        </tr>
+        <tr>
+          <td><strong>French Drains &amp; Vapor Liners</strong></td>
+          <td>$2,500 to $6,500 typical perimeter drain or 20-mil liner</td>
+          <td><a href="https://water.ca.gov/" target="_blank" rel="noopener noreferrer">CA Dept. of Water Resources Drainage Context</a></td>
+        </tr>
+        <tr>
+          <td><strong>Crawlspace Encapsulation</strong></td>
+          <td>$4,500 to $12,500 sealed 20-mil liner + dehumidifier</td>
+          <td><a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">CA Licensed B / C-39 Specialty Index</a></td>
+        </tr>
+        <tr>
+          <td><strong>Structural Push &amp; Helical Piers</strong></td>
+          <td>$6,500 to $25,000+ ($1,600 to $3,000 per steel pier)</td>
+          <td><a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey Soil Hazards</a></td>
+        </tr>
+        <tr>
+          <td><strong>Regional Housing Footprint</strong></td>
+          <td>Sacramento, Placer &amp; El Dorado County residential base</td>
+          <td><a href="https://www.census.gov/quickfacts/sacramentocountycalifornia" target="_blank" rel="noopener noreferrer">US Census Bureau QuickFacts</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 """
 
@@ -928,26 +951,50 @@ def build_homepage(contractors: list, cities_dict: dict, all_cities: list) -> st
                 "mainEntity": [
                     {
                         "@type": "Question",
-                        "name": "How much does foundation repair or crawlspace encapsulation cost around Sacramento?",
+                        "name": "What is the average price for foundation repair?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "Minor drainage or vapor barrier fixes often start between $2,500 and $6,000, while structural underpinning piers and full crawlspace encapsulation commonly range from $6,000 to $25,000 depending on soil movement and square footage.",
+                            "text": "Average foundation repair in Greater Sacramento runs $6,500 to $22,000 for steel push piers or helical piers ($1,600 to $3,000 per pier), while minor epoxy crack sealing, shimming, or perimeter drainage fixes cost $2,500 to $6,000.",
                         },
                     },
                     {
                         "@type": "Question",
-                        "name": "Why do homes in Folsom, Roseville, and Sacramento develop foundation cracks?",
+                        "name": "Will insurance pay for foundation repair?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "Expansive local clay soils swell during winter rain and shrink during dry summer months, lifting and dropping concrete slabs, stem walls, and crawlspace piers.",
+                            "text": "No, standard California homeowners insurance excludes soil settling, expansive clay swelling, and normal foundation wear. Coverage usually applies only when a sudden accidental plumbing leak directly washes out soil under the slab.",
                         },
                     },
                     {
                         "@type": "Question",
-                        "name": "How do contractors claim a listing or get featured leads?",
+                        "name": "What time of year is best for foundation repair?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "Any foundation, crawlspace, or drainage company can submit the Claim Listing form to update phone numbers and license info for free, or reserve an exclusive Featured city spotlight starting at $49/month.",
+                            "text": "Dry months from late spring through early fall offer the cleanest excavation access around Sacramento, though steel underpinning piers can be installed year-round once standing winter water is drained away from footings.",
+                        },
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can you live in a house while foundation repair is done?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes, homeowners normally stay inside their home during foundation repair because crews work outside footings or underneath raised crawlspaces for 2 to 5 days.",
+                        },
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "How much should it cost to encapsulate a crawl space?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Full 20-mil vapor barrier crawlspace encapsulation, sealed vents, and a crawlspace dehumidifier around Sacramento typically cost $4,500 to $12,500 depending on square footage and clearance.",
+                        },
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "How much does it cost to have someone install a French drain?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Professional French drain installation costs $25 to $65 per linear foot, putting most residential side-yard and perimeter foundation drainage runs between $2,500 and $6,500.",
                         },
                     },
                 ],
@@ -958,12 +1005,12 @@ def build_homepage(contractors: list, cities_dict: dict, all_cities: list) -> st
     body = f"""
 <section class="hero-band">
   <div class="wrap">
-    <h1>Greater Sacramento <span class="hl">Foundation, Crawlspace &amp; Drainage</span> Contractors</h1>
+    <h1><span class="hl">Foundation Repair</span> Contractors in Greater Sacramento</h1>
     <p class="lede">
-      Compare {total} local structural repair, vapor barrier, French drain, and waterproofing specialists across {len(all_cities)} Sacramento, Placer, and El Dorado cities.
+      Compare {total} local foundation repair, house leveling, crawlspace encapsulation, and French drain contractors across {len(all_cities)} Sacramento, Placer, and El Dorado cities.
     </p>
     <form class="dir-search" action="/directory/" method="get">
-      <input type="text" name="q" placeholder="Search city (Folsom, Roseville, Elk Grove) or service (French drain, crawlspace)..." />
+      <input type="text" name="q" placeholder="Search city (Roseville, Folsom, Sacramento) or service (foundation repair, French drain)..." />
       <button type="submit">Search Directory</button>
     </form>
   </div>
@@ -979,18 +1026,18 @@ def build_homepage(contractors: list, cities_dict: dict, all_cities: list) -> st
 
   <section class="two-col" style="margin-top: 1.5rem;">
     <div>
-      <h2 style="margin-top:0;">Need Help With Settling Floors, Wet Crawlspaces, or Yard Drainage?</h2>
+      <h2 style="margin-top:0;">Need Foundation Repair, Leveling, or Drainage in Sacramento?</h2>
       <p>
-        Expansive clay soil across Sacramento, Folsom, Roseville, and Elk Grove puts heavy pressure on foundations, crawlspace joists, and perimeter drains. Waiting until floors slope or mold spreads turns a $3,500 moisture fix into a $20,000+ structural repair.
+        Expansive clay soil across Sacramento, Roseville, Folsom, and Elk Grove swells during winter storms and shrinks hard in summer heat, stressing concrete slabs, crawlspace joists, and yard drains. Fixing water runoff or sagging beams early stops a $3,500 repair from becoming a $20,000+ underpinning job.
       </p>
       <p>
-        Use this directory to compare established local specialists by city, or send one quick inspection request using the form here to get connected directly.
+        Use this directory to compare verified local specialists by city, or send one quick inspection request using the form here to get direct callbacks.
       </p>
       <div class="biz-card open-slot" style="margin-top: 1.25rem;">
         <div class="biz-top"><span class="badge gold">Featured Sponsor Slot Open</span><span>All {len(all_cities)} Cities</span></div>
         <div class="biz-name">Put Your Company at the Top of Your City Page</div>
         <p style="margin:0; font-size:0.93rem;">
-          Lock in the #1 spotlight in Folsom, Roseville, Sacramento, Rocklin, El Dorado Hills, or Elk Grove starting at $49/month, or claim exclusive homeowner quote routing.
+          Lock in the #1 spotlight in Roseville, Folsom, Sacramento, Rocklin, El Dorado Hills, or Elk Grove starting at $49/month, or claim exclusive homeowner quote routing.
         </p>
         <div class="biz-foot">
           <a class="phone-link" href="tel:{TRACKING_TEL}">Call {TRACKING_PHONE}</a>
@@ -1005,67 +1052,79 @@ def build_homepage(contractors: list, cities_dict: dict, all_cities: list) -> st
   {COVERAGE_CHART_FIGURE}
 
   <section>
-    <h2>Browse by Specialty</h2>
+    <h2>Browse by Service &amp; Cost Guide</h2>
     <div class="biz-grid">
       <div class="biz-card">
-        <div class="biz-top"><span class="badge gold">Specialty Guide</span><span>Slabs &amp; Piers</span></div>
-        <div class="biz-name"><a href="/services/foundation-repair/">Foundation Repair &amp; Stabilization</a></div>
-        <p style="margin:0; font-size:0.9rem;">Push piers, helical piers, stem wall crack repair, costs, and engineer vetting.</p>
+        <div class="biz-top"><span class="badge gold">Buying Guide</span><span>Slabs &amp; Piers</span></div>
+        <div class="biz-name"><a href="/services/foundation-repair/">Foundation Repair &amp; Underpinning</a></div>
+        <p style="margin:0; font-size:0.9rem;">Push piers, helical piers, epoxy crack repair, structural engineers, and Sacramento cost ranges.</p>
         <div class="biz-foot"><a class="btn primary" href="/services/foundation-repair/">Read Guide &amp; Pros</a></div>
       </div>
       <div class="biz-card">
-        <div class="biz-top"><span class="badge gold">Specialty Guide</span><span>Floor Lifting</span></div>
+        <div class="biz-top"><span class="badge gold">Buying Guide</span><span>Floor Lifting</span></div>
         <div class="biz-name"><a href="/services/house-leveling/">House Leveling Services</a></div>
-        <p style="margin:0; font-size:0.9rem;">Slab foam jacking, pier-and-beam shimming, plumbing pipe protection, and leveling costs.</p>
+        <p style="margin:0; font-size:0.9rem;">Slab foam jacking, pier-and-beam shimming, plumbing pipe protection, and leveling prices.</p>
         <div class="biz-foot"><a class="btn primary" href="/services/house-leveling/">Read Guide &amp; Pros</a></div>
       </div>
       <div class="biz-card">
-        <div class="biz-top"><span class="badge gold">Specialty Guide</span><span>Under-Floor Moisture</span></div>
+        <div class="biz-top"><span class="badge gold">Buying Guide</span><span>Moisture Control</span></div>
         <div class="biz-name"><a href="/services/crawlspace-encapsulation/">Crawlspace Encapsulation &amp; Vapor Barriers</a></div>
-        <p style="margin:0; font-size:0.9rem;">Stop musty indoor air, damp floor joists, and standing water beneath raised foundations.</p>
-        <div class="biz-foot"><a class="btn primary" href="/services/crawlspace-encapsulation/">View Specialists</a></div>
+        <p style="margin:0; font-size:0.9rem;">20-mil vapor barriers vs. plastic liners, dehumidifiers, mold prevention, and real costs.</p>
+        <div class="biz-foot"><a class="btn primary" href="/services/crawlspace-encapsulation/">Read Guide &amp; Pros</a></div>
       </div>
       <div class="biz-card">
-        <div class="biz-top"><span class="badge gold">Specialty Guide</span><span>Runoff Control</span></div>
-        <div class="biz-name"><a href="/services/drainage-french-drains/">French Drains &amp; Yard Waterproofing</a></div>
-        <p style="margin:0; font-size:0.9rem;">Perimeter drains, sump basins, catch basins, and grading to keep winter storms away from footings.</p>
-        <div class="biz-foot"><a class="btn primary" href="/services/drainage-french-drains/">View Specialists</a></div>
+        <div class="biz-top"><span class="badge gold">Buying Guide</span><span>Water Runoff</span></div>
+        <div class="biz-name"><a href="/services/drainage-french-drains/">French Drain Installation &amp; Yard Drainage</a></div>
+        <p style="margin:0; font-size:0.9rem;">100 ft, 200 ft &amp; 300 ft French drain costs, catch basins, sump pumps, and grading pros.</p>
+        <div class="biz-foot"><a class="btn primary" href="/services/drainage-french-drains/">Read Guide &amp; Pros</a></div>
       </div>
     </div>
   </section>
 
   <section>
     <h2>Browse Contractors by City</h2>
-    <p style="color: var(--muted); margin-top: 0;">Select your city to view local foundation leveling, crawlspace encapsulation, and French drain specialists.</p>
+    <p style="color: var(--muted); margin-top: 0;">Select your city to compare local foundation repair, house leveling, crawlspace, and French drain companies.</p>
     <ul class="city-cards">{city_items}</ul>
   </section>
 
   <section>
-    <h2>Top Reviewed Regional Specialists</h2>
+    <h2>Top Reviewed Greater Sacramento Specialists</h2>
     <div class="biz-grid">{cards_html}</div>
     <p><a class="btn primary" href="/directory/">Browse All {total} Contractors</a></p>
   </section>
 
   <section style="margin-top: 2.5rem;">
-    <h2>Common Homeowner Questions</h2>
-    <h3>How much does foundation repair or crawlspace encapsulation cost around Sacramento?</h3>
-    <p>
-      Targeted French drains, sump pumps, and crawlspace vapor barriers often range from $2,500 to $6,500, while structural underpinning piers and full crawlspace encapsulation commonly cost between $6,000 and $25,000 depending on home size and soil movement.
+    <h2>Foundation Repair, Crawlspace &amp; French Drain FAQs (Real Homeowner Searches)</h2>
+    <h3>What is the average price for foundation repair?</h3>
+    <p class="direct-answer">
+      Average foundation repair in Greater Sacramento runs $6,500 to $22,000 for steel push piers or helical piers ($1,600 to $3,000 per pier), while minor epoxy crack sealing, crawlspace shimming, or drainage fixes typically cost $2,500 to $6,000.
     </p>
-    <h3>Why do homes in Folsom, Roseville, and Sacramento develop foundation cracks?</h3>
-    <p>
-      Expansive local clay soil swells when soaked by winter storms and shrinks sharply in dry summer heat, causing slab edges and pier-and-beam footings to heave or settle unevenly.
+    <h3>Will insurance pay for foundation repair?</h3>
+    <p class="direct-answer">
+      No, standard California homeowners insurance excludes soil settling, expansive clay swelling, and normal foundation wear. Coverage usually applies only when a sudden accidental plumbing leak washes out support soil under the slab.
     </p>
-    <h3>How do contractors claim a listing or receive featured leads?</h3>
-    <p>
-      Submit the <a href="/claim/">Claim Listing</a> page to update your phone number and license details free, or see <a href="/featured/">Featured Placements</a> to reserve top placement in your service area.
+    <h3>What time of year is best for foundation repair?</h3>
+    <p class="direct-answer">
+      Dry months from late spring through early fall give crews the cleanest excavation access around Sacramento, though steel push piers and helical piers can be installed year-round once standing winter water is pumped away from footings.
+    </p>
+    <h3>Can you live in a house while foundation repair is done?</h3>
+    <p class="direct-answer">
+      Yes, homeowners normally stay inside their home during foundation repair because crews work outside along exterior footings or underneath raised crawlspaces for 2 to 5 days.
+    </p>
+    <h3>How much should it cost to encapsulate a crawl space?</h3>
+    <p class="direct-answer">
+      Full 20-mil vapor barrier crawlspace encapsulation, sealed vents, and a crawlspace dehumidifier around Sacramento typically run $4,500 to $12,500 depending on square footage and under-floor clearance.
+    </p>
+    <h3>How much does it cost to have someone install a French drain?</h3>
+    <p class="direct-answer">
+      Hiring a drainage contractor typically costs $25 to $65 per linear foot, putting most residential side-yard and perimeter foundation runs between $2,500 and $6,500.
     </p>
   </section>
 </div>
 """
     return page_shell(
-        "Sacramento & Placer Foundation, Crawlspace & Drainage Directory",
-        f"Compare {total} foundation repair, crawlspace encapsulation, and French drain contractors across Folsom, Roseville, Sacramento, Rocklin, and El Dorado Hills.",
+        "Foundation Repair Sacramento & Placer County | Verified Pros & 2026 Costs",
+        f"Compare {total} foundation repair, house leveling, crawlspace encapsulation, and French drain companies across Sacramento, Roseville, Folsom, and Elk Grove.",
         "/",
         body,
         all_cities,
@@ -1080,8 +1139,8 @@ def build_directory_index(contractors: list, all_cities: list) -> str:
     body = f"""
 <div class="wrap">
   <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; Directory</div>
-  <h1>All Foundation, Crawlspace &amp; Drainage Contractors</h1>
-  <p style="color: var(--muted);">Filter all {len(contractors)} regional listings by city, specialty, or company name.</p>
+  <h1>Foundation Repair &amp; Drainage Companies in Greater Sacramento</h1>
+  <p style="color: var(--muted);">Filter all {len(contractors)} regional foundation repair, house leveling, crawlspace, and French drain contractors by city or specialty.</p>
 
   <div class="filter-bar">
     <input type="text" id="filterQuery" placeholder="Filter by company name, city, or street..." />
@@ -1179,8 +1238,8 @@ def build_directory_index(contractors: list, all_cities: list) -> str:
 </script>
 """
     return page_shell(
-        f"Browse All {len(contractors)} Foundation & Crawlspace Contractors",
-        "Search and filter foundation repair, crawlspace encapsulation, vapor barrier, and drainage contractors across Greater Sacramento and Placer County.",
+        f"Sacramento Foundation Repair Companies & Crawlspace Contractors ({len(contractors)})",
+        "Search and filter foundation repair companies, house leveling specialists, crawlspace encapsulation crews, and French drain contractors across Greater Sacramento and Placer County.",
         "/directory/",
         body,
         all_cities,
@@ -1216,7 +1275,7 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
             },
             {
                 "@type": "ItemList",
-                "name": f"Best Foundation, Crawlspace & Drainage Contractors in {city}, CA",
+                "name": f"Foundation Repair Contractors in {city}, CA",
                 "numberOfItems": len(list_co),
                 "itemListElement": [
                     {
@@ -1233,10 +1292,18 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
                 "mainEntity": [
                     {
                         "@type": "Question",
-                        "name": "How much does it typically cost to fix foundation issues?",
+                        "name": "What is the average price for foundation repair?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": f"In {city}, CA, minor French drains and crawlspace moisture fixes usually run $2,500 to $6,000, while structural push piers, slab leveling, and full crawlspace encapsulation average $6,000 to $25,000+.",
+                            "text": f"In {city}, CA, residential foundation repair averages $6,500 to $22,000 for steel push piers or helical piers ($1,600 to $3,000 per pier), while crack injections, shimming, and perimeter drainage usually run $2,500 to $6,000.",
+                        },
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can you fix a foundation without lifting the house?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": f"Yes, {city} foundation contractors routinely stabilize settled footings in place with steel piers, epoxy injections, or French drain moisture control without raising the home back up.",
                         },
                     },
                     {
@@ -1244,7 +1311,15 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
                         "name": "Will insurance pay for foundation repair?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "Standard homeowner insurance excludes soil settling, expansive clay movement, and normal foundation wear. Coverage usually applies only when sudden plumbing pipe breaks directly undermine the slab or footings.",
+                            "text": "Standard California homeowner policies exclude soil settling, expansive clay movement, and normal foundation wear. Coverage usually applies only when sudden plumbing pipe breaks directly undermine the slab or footings.",
+                        },
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can you live in a house while foundation repair is done?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": f"Yes, most {city} homeowners remain at home during repair because crews work outside exterior footings or under crawlspaces over 2 to 5 days.",
                         },
                     },
                     {
@@ -1263,11 +1338,11 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
     body = f"""
 <div class="wrap">
   <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; <a href="/directory/">Directory</a> &rsaquo; {esc(city)}, CA</div>
-  <h1>Best Foundation, Crawlspace &amp; Drainage Contractors in {esc(city)}, CA</h1>
+  <h1>Foundation Repair Contractors in {esc(city)}, CA</h1>
   <p style="font-size:1.05rem; color: var(--muted);">
-    Comparing {len(list_co)} local specialists serving {esc(city)} ({esc(county)}{f", ZIP codes {esc(local_zips)}" if local_zips else ""}).
+    Comparing {len(list_co)} local foundation repair, house leveling, crawlspace encapsulation, and French drain companies serving {esc(city)} ({esc(county)}{f", ZIP codes {esc(local_zips)}" if local_zips else ""}).
   </p>
-  <p style="margin-top:0.25rem;">
+  <p style="margin-top:0.25rem;" class="direct-answer">
     {esc(local_context)}
   </p>
 
@@ -1285,17 +1360,21 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
         </div>
       </div>
 
-      <h2 style="margin-top:0;">Listed Contractors in {esc(city)} ({len(list_co)})</h2>
+      <h2 style="margin-top:0;">Local Foundation, Crawlspace &amp; Drainage Companies in {esc(city)} ({len(list_co)})</h2>
       <div class="biz-grid">{cards_html}</div>
 
       <div class="panel" style="margin-top: 1.75rem;">
-        <h2 style="margin-top:0;">Residential Foundation Repair &amp; Crawlspace Cost in {esc(city)}</h2>
-        <h3>How much does it typically cost to fix foundation issues?</h3>
-        <p>In {esc(city)}, CA, minor French drains and crawlspace moisture fixes usually run $2,500 to $6,000, while structural push piers, slab leveling, and full crawlspace encapsulation average $6,000 to $25,000+.</p>
+        <h2 style="margin-top:0;">{esc(city)}, CA Foundation Repair Cost &amp; Homeowner FAQs</h2>
+        <h3>What is the average price for foundation repair?</h3>
+        <p class="direct-answer">In {esc(city)}, CA, residential foundation repair averages $6,500 to $22,000 for steel push piers or helical piers ($1,600 to $3,000 per pier), while crack injections, crawlspace shimming, and perimeter French drains usually run $2,500 to $6,000.</p>
+        <h3>Can you fix a foundation without lifting the house?</h3>
+        <p class="direct-answer">Yes, {esc(city)} foundation contractors routinely stabilize settled footings in place with steel piers, epoxy crack injections, or drainage control without raising the home back up.</p>
         <h3>Will insurance pay for foundation repair?</h3>
-        <p>Standard homeowner insurance excludes soil settling, expansive clay movement, and normal foundation wear. Coverage usually applies only when sudden plumbing pipe breaks directly undermine the slab or footings.</p>
+        <p class="direct-answer">Standard homeowner insurance excludes soil settling, expansive clay movement, and normal foundation wear. Coverage usually applies only when sudden plumbing pipe breaks directly undermine the slab or footings.</p>
+        <h3>Can you live in a house while foundation repair is done?</h3>
+        <p class="direct-answer">Yes, most {esc(city)} homeowners remain inside the house during repair because crews work outside along exterior footings or underneath crawlspaces over 2 to 5 days.</p>
         <h3>How much should it cost to encapsulate a crawl space?</h3>
-        <p>Full 20-mil vapor barrier crawlspace encapsulation, rim joist sealing, and dehumidifier setup in {esc(city)} generally ranges from $4,500 to $12,500 depending on access height and square footage. Always confirm an active California C-57 or B/C-8 contractor license on the <a href="https://www.cslb.ca.gov/" target="_blank" rel="noopener noreferrer">CSLB lookup portal</a> before signing.</p>
+        <p class="direct-answer">Full 20-mil vapor barrier crawlspace encapsulation, rim joist sealing, and dehumidifier setup in {esc(city)} generally ranges from $4,500 to $12,500 depending on access height and square footage. Always confirm an active California contractor license on the <a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">CSLB lookup portal</a> before signing.</p>
       </div>
       {AUTHORITY_BENCHMARK_TABLE}
     </div>
@@ -1303,7 +1382,7 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
     <div>
       {render_quote_form(default_city=city, heading=f"Request {city} Quotes")}
       <div class="panel" style="margin-top: 1.25rem;">
-        <h3 style="margin-top:0;">Explore By Specialty</h3>
+        <h3 style="margin-top:0;">Explore By Service</h3>
         <div style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom:1.1rem;">{silo_links}</div>
         <h3 style="margin-top:0;">Nearby Service Cities</h3>
         <div style="display:flex; flex-wrap:wrap; gap:0.45rem;">{nearby}</div>
@@ -1313,8 +1392,8 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
 </div>
 """
     return page_shell(
-        f"Best Foundation, Crawlspace & Drainage in {city}, CA",
-        f"Compare {len(list_co)} foundation repair, crawlspace waterproofing, and French drain contractors serving {city}, {county}, CA.",
+        f"Foundation Repair {city}, CA: Licensed Contractors & 2026 Costs",
+        f"Compare {len(list_co)} foundation repair, house leveling, crawlspace waterproofing, and French drain contractors serving {city}, {county}, CA.",
         canon,
         body,
         all_cities,
@@ -1582,13 +1661,13 @@ def build_static_pages(all_cities: list) -> dict:
 
     # /quote/
     pages["/quote/"] = page_shell(
-        "Request Foundation, Crawlspace or Drainage Quotes",
-        "Get connected with Greater Sacramento, Folsom, Roseville, and Elk Grove foundation leveling, crawlspace encapsulation, and French drain contractors.",
+        "Request Foundation Repair or French Drain Quotes in Sacramento",
+        "Get connected with Greater Sacramento, Roseville, Folsom, and Elk Grove foundation repair, house leveling, crawlspace encapsulation, and French drain contractors.",
         "/quote/",
         f"""
 <div class="wrap" style="max-width: 780px; margin: 2.25rem auto 4rem;">
   <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; Request Quotes</div>
-  <h1>Request Foundation, Crawlspace or Drainage Quotes</h1>
+  <h1>Request Foundation Repair or Drainage Quotes in Sacramento</h1>
   <p style="color: var(--muted);">
     Tell us what your home or crawlspace needs below, or call our dispatch desk at <a href="tel:{TRACKING_TEL}"><strong>{TRACKING_PHONE}</strong></a>. Submitting a request here is free; individual contractors confirm upfront if a diagnostic or real-estate escrow inspection fee applies.
   </p>
@@ -1722,7 +1801,7 @@ def build_static_pages(all_cities: list) -> dict:
   </div>
 
   <div style="max-width: 780px; margin-top: 2rem;">
-    <div class="panel" style="overflow-x:auto;">
+    <div class="panel">
       <h2 style="margin-top:0;">Directory Tier Comparison: Free Listing vs. $49/mo Spotlight vs. $149/mo Exclusive</h2>
       <figure style="margin:0 0 1.25rem; padding:0.75rem; border:1px solid var(--border); border-radius:8px; background:#fff;">
         <img src="/assets/greater-sacramento-contractor-coverage-tiers.jpg" alt="Greater Sacramento, Placer, and El Dorado County foundation and drainage contractor coverage breakdown chart" width="1200" height="700" loading="lazy" style="width:100%; height:auto; display:block; border-radius:6px;" />
@@ -1730,16 +1809,18 @@ def build_static_pages(all_cities: list) -> dict:
           Chart: Regional contractor distribution across Greater Sacramento, Placer, and El Dorado cities. Sources: <a href="https://www.cslb.ca.gov/" target="_blank" rel="noopener noreferrer">California CSLB</a> &amp; <a href="https://www.census.gov/quickfacts/sacramentocountycalifornia" target="_blank" rel="noopener noreferrer">US Census QuickFacts</a> | <a href="/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf" target="_blank" rel="noopener">Companion Benchmark PDF</a> | <a href="https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026" target="_blank" rel="noopener noreferrer">Archive.org Mirror</a>.
         </figcaption>
       </figure>
-      <table class="info-table" style="min-width:520px;">
-        <thead>
-          <tr><th>Plan Tier</th><th>Monthly Cost</th><th>Placement &amp; Lead Scope</th><th>Territory Exclusivity</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Verified Public Profile</strong></td><td>$0 / mo</td><td>Standard city directory listing with verified phone &amp; CSLB badge</td><td>None (shared city page)</td></tr>
-          <tr><td><strong>City Spotlight Listing</strong></td><td>$49 / mo</td><td>Pinned #1 card above regular contractors in 1 city</td><td>1 Spotlight slot per city</td></tr>
-          <tr><td><strong>Exclusive City Lead Partner</strong></td><td>$149 / mo</td><td>Top placement in up to 3 cities + direct homeowner call/form routing</td><td>Exclusive lead routing per city</td></tr>
-        </tbody>
-      </table>
+      <div class="table-wrap">
+        <table class="info-table">
+          <thead>
+            <tr><th>Plan Tier</th><th>Monthly Cost</th><th>Placement &amp; Lead Scope</th><th>Territory Exclusivity</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Verified Public Profile</strong></td><td>$0 / mo</td><td>Standard city directory listing with verified phone &amp; CSLB badge</td><td>None (shared city page)</td></tr>
+            <tr><td><strong>City Spotlight Listing</strong></td><td>$49 / mo</td><td>Pinned #1 card above regular contractors in 1 city</td><td>1 Spotlight slot per city</td></tr>
+            <tr><td><strong>Exclusive City Lead Partner</strong></td><td>$149 / mo</td><td>Top placement in up to 3 cities + direct homeowner call/form routing</td><td>Exclusive lead routing per city</td></tr>
+          </tbody>
+        </table>
+      </div>
       <p style="font-size:0.86rem; color:var(--muted); margin-bottom:0;">
         Verification reference: California contractor license requirements via <a href="https://www.cslb.ca.gov/" target="_blank" rel="noopener noreferrer">California CSLB</a>.
       </p>
