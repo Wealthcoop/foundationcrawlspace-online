@@ -17,6 +17,8 @@ from guides_content import (
     FRENCH_DRAIN_GUIDE,
     HOUSE_LEVELING_GUIDE,
 )
+from clusters_silo_1_2 import CLUSTER_ARTICLES_1_2
+from clusters_silo_3_4_edge import CLUSTER_ARTICLES_3_4_EDGE
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "contractors_data.json"
@@ -81,6 +83,56 @@ SERVICE_SILOS = [
     CRAWLSPACE_ENCAPSULATION_GUIDE,
     FRENCH_DRAIN_GUIDE,
 ]
+
+CLUSTER_ARTICLES = CLUSTER_ARTICLES_1_2 + CLUSTER_ARTICLES_3_4_EDGE
+ALL_SERVICE_GUIDES = SERVICE_SILOS + CLUSTER_ARTICLES
+
+COUNTY_INFO = {
+    "Sacramento County": {
+        "slug": "sacramento-county",
+        "geo": "Sacramento County, CA",
+        "pos": "38.5816;-121.4944",
+        "soil": "Alluvial valley basin clay and river silt along the American and Sacramento river corridors cause seasonal expansion and contraction beneath both older 1950s to 1980s raised-floor subfloors and newer slab subdivisions.",
+        "era": "Pre-1980 raised pier-and-beam foundations in Land Park, East Sac, and Citrus Heights alongside 1990s to 2020s post-tension slabs in Elk Grove, Natomas, and Folsom.",
+        "permit_url": "https://building.saccounty.gov/",
+        "permit_label": "Sacramento County Building Permits & Inspection Division",
+        "drainage_rule": "Unincorporated county lots and Sacramento municipal streets prohibit directing concentrated French drain discharge onto neighboring parcels and require approved curb core or storm-swale tie-in permits.",
+    },
+    "Placer County": {
+        "slug": "placer-county",
+        "geo": "Placer County, CA",
+        "pos": "38.7521;-121.2880",
+        "soil": "Expansive West Roseville and Lincoln basin clays meet shallow hardpan and granite shelves around Rocklin, Granite Bay, and Auburn foothills, creating mixed slab edge heave and subsurface winter spring seepage.",
+        "era": "1990s to 2020s post-tension concrete slabs across Roseville, Rocklin, and Lincoln plus custom hillside pier-and-beam and retaining-wall homes in Granite Bay and Auburn.",
+        "permit_url": "https://www.placer.ca.gov/2491/Building-Services",
+        "permit_label": "Placer County Community Development / Building Services",
+        "drainage_rule": "Placer County grading and Roseville public works standards require foundation slopes dropping away from footings plus curb-drainage approval before discharging perimeter sump or downspout piping into city gutters.",
+    },
+    "El Dorado County": {
+        "slug": "el-dorado-county",
+        "geo": "El Dorado County, CA",
+        "pos": "38.6857;-121.0822",
+        "soil": "Steep decomposed granite slopes, fractured bedrock, and shallow clay pockets across El Dorado Hills, Cameron Park, and Placerville push fast winter sheet runoff straight against lower retaining walls and crawlspace stem walls.",
+        "era": "Custom hillside walkout levels and post-tension pads in Serrano and El Dorado Hills paired with older timber-joist mountain homes around Placerville.",
+        "permit_url": "https://www.edcgov.us/Government/building",
+        "permit_label": "El Dorado County Building Services Division",
+        "drainage_rule": "Retaining walls over 3 to 4 feet or deep hillside soil piers require engineered structural permits and erosion-controlled downhill storm discharge.",
+    },
+}
+
+CITY_GEO_COORDS = {
+    "Sacramento": "38.5816;-121.4944",
+    "Folsom": "38.6780;-121.1761",
+    "Roseville": "38.7521;-121.2880",
+    "El Dorado Hills": "38.6857;-121.0822",
+    "Placerville": "38.7296;-120.7986",
+    "Auburn": "38.8966;-121.0769",
+    "Citrus Heights": "38.7071;-121.2811",
+    "Lincoln": "38.8916;-121.2930",
+    "Rocklin": "38.7907;-121.2358",
+    "Granite Bay": "38.7632;-121.1638",
+    "Elk Grove": "38.4088;-121.3716",
+}
 
 COMMON_CSS = """
 :root {
@@ -776,6 +828,18 @@ def render_quote_form(default_city: str = "", default_service: str = "Foundation
 """
 
 
+def render_county_cards(cities_dict: dict) -> str:
+    items = []
+    for cname, info in COUNTY_INFO.items():
+        ccities = [c for c, lst in cities_dict.items() if lst and lst[0]["county"] == cname]
+        cnt = sum(len(cities_dict[c]) for c in ccities)
+        items.append(
+            f'<li><a href="/directory/california/{info["slug"]}/"><strong>{esc(cname)}, CA</strong>'
+            f'<span class="count">{len(ccities)} cities &middot; {cnt} listed contractors</span></a></li>'
+        )
+    return "".join(items)
+
+
 def render_rating_line(c: dict) -> str:
     if c.get("rating") is not None:
         return f'<div class="stars">{c["rating"]:.1f}&#9733; ({c["reviews"]} Google reviews)</div>'
@@ -811,7 +875,17 @@ def render_card(c: dict) -> str:
 """
 
 
-def page_shell(title: str, desc: str, canon_path: str, body_html: str, cities: list, schema_obj: dict = None) -> str:
+def page_shell(
+    title: str,
+    desc: str,
+    canon_path: str,
+    body_html: str,
+    cities: list,
+    schema_obj: dict = None,
+    geo_place: str = "Sacramento, CA",
+    geo_pos: str = "38.5816;-121.4944",
+    og_image: str = f"{DOMAIN}/assets/sacramento-foundation-repair-cost-cslb-benchmarks.jpg",
+) -> str:
     if schema_obj is None and canon_path != "/":
         label = canon_path.strip("/").replace("-", " ").title()
         schema_obj = {
@@ -861,6 +935,10 @@ def page_shell(title: str, desc: str, canon_path: str, body_html: str, cities: l
             "greater-sacramento-contractor-coverage-tiers.jpg",
             "Greater Sacramento, Placer, and El Dorado County foundation and drainage contractor coverage breakdown chart",
         ),
+        (
+            "sacramento-repair-methods-cost-comparison-2026.jpg",
+            "2026 cost comparison by repair method across Greater Sacramento, Placer, and El Dorado counties",
+        ),
     ]
     image_nodes = []
     for fname, caption in CHART_IMAGE_SPECS:
@@ -890,6 +968,7 @@ def page_shell(title: str, desc: str, canon_path: str, body_html: str, cities: l
     schema_tag = ""
     if schema_obj:
         schema_tag = f'<script type="application/ld+json">{json.dumps(schema_obj, ensure_ascii=False)}</script>'
+    icbm_pos = geo_pos.replace(";", ", ")
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -900,10 +979,19 @@ def page_shell(title: str, desc: str, canon_path: str, body_html: str, cities: l
   <meta name="description" content="{esc(desc)}" />
   {canonical_tag(canon_path)}
   <link rel="alternate" type="text/plain" title="LLMs.txt" href="{DOMAIN}/llms.txt" />
+  <meta name="geo.region" content="US-CA" />
+  <meta name="geo.placename" content="{esc(geo_place)}" />
+  <meta name="geo.position" content="{esc(geo_pos)}" />
+  <meta name="ICBM" content="{esc(icbm_pos)}" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="{esc(title)}" />
   <meta property="og:description" content="{esc(desc)}" />
   <meta property="og:url" content="{DOMAIN}{canon_path}" />
+  <meta property="og:image" content="{esc(og_image)}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{esc(title)}" />
+  <meta name="twitter:description" content="{esc(desc)}" />
+  <meta name="twitter:image" content="{esc(og_image)}" />
   <style>{COMMON_CSS}</style>
   {schema_tag}
 </head>
@@ -1082,8 +1170,9 @@ def build_homepage(contractors: list, cities_dict: dict, all_cities: list) -> st
   </section>
 
   <section>
-    <h2>Browse Contractors by City</h2>
-    <p style="color: var(--muted); margin-top: 0;">Select your city to compare local foundation repair, house leveling, crawlspace, and French drain companies.</p>
+    <h2>Browse Contractors by City &amp; County</h2>
+    <p style="color: var(--muted); margin-top: 0;">Select your county or city to compare local foundation repair, house leveling, crawlspace, and French drain companies.</p>
+    <ul class="city-cards" style="margin-bottom:1.25rem;">{render_county_cards(cities_dict)}</ul>
     <ul class="city-cards">{city_items}</ul>
   </section>
 
@@ -1138,7 +1227,7 @@ def build_directory_index(contractors: list, all_cities: list) -> str:
 
     body = f"""
 <div class="wrap">
-  <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; Directory</div>
+  <nav class=\"breadcrumbs\" aria-label=\"Breadcrumb\"><a href="/">Home</a> &rsaquo; Directory</nav>
   <h1>Foundation Repair &amp; Drainage Companies in Greater Sacramento</h1>
   <p style="color: var(--muted);">Filter all {len(contractors)} regional foundation repair, house leveling, crawlspace, and French drain contractors by city or specialty.</p>
 
@@ -1249,6 +1338,9 @@ def build_directory_index(contractors: list, all_cities: list) -> str:
 def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> str:
     cslug = city_slug(city)
     canon = f"/directory/california/{cslug}/"
+    c_info = COUNTY_INFO.get(county, {})
+    county_slug = c_info.get("slug", "")
+    geo_pos = CITY_GEO_COORDS.get(city, "38.5816;-121.4944")
     cards_html = "".join(render_card(c) for c in list_co)
     nearby = "".join(
         f'<a class="btn subtle" href="/directory/california/{city_slug(other)}/">{esc(other)}</a>'
@@ -1261,17 +1353,28 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
         f'<a class="btn subtle" href="/services/{s["slug"]}/">{esc(s["name"])}</a>'
         for s in SERVICE_SILOS
     )
+    edge_links = "".join([
+        '<a class="btn subtle" href="/services/post-tension-slab-foundation-repair/">Post-Tension Slab Repair</a>',
+        '<a class="btn subtle" href="/services/retaining-wall-repair-stabilization/">Retaining Wall Stabilization</a>',
+        '<a class="btn subtle" href="/services/concrete-driveway-patio-pool-deck-leveling/">Driveway &amp; Pool Deck Leveling</a>',
+    ])
+
+    crumb_items = [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{DOMAIN}/"},
+        {"@type": "ListItem", "position": 2, "name": "Directory", "item": f"{DOMAIN}/directory/"},
+    ]
+    if county_slug:
+        crumb_items.append({"@type": "ListItem", "position": 3, "name": county, "item": f"{DOMAIN}/directory/california/{county_slug}/"})
+        crumb_items.append({"@type": "ListItem", "position": 4, "name": f"{city}, CA", "item": f"{DOMAIN}{canon}"})
+    else:
+        crumb_items.append({"@type": "ListItem", "position": 3, "name": f"{city}, CA", "item": f"{DOMAIN}{canon}"})
 
     schema = {
         "@context": "https://schema.org",
         "@graph": [
             {
                 "@type": "BreadcrumbList",
-                "itemListElement": [
-                    {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{DOMAIN}/"},
-                    {"@type": "ListItem", "position": 2, "name": "Directory", "item": f"{DOMAIN}/directory/"},
-                    {"@type": "ListItem", "position": 3, "name": f"{city}, CA", "item": f"{DOMAIN}{canon}"},
-                ],
+                "itemListElement": crumb_items,
             },
             {
                 "@type": "ItemList",
@@ -1335,9 +1438,20 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
         ],
     }
 
+    county_crumb = f' &rsaquo; <a href="/directory/california/{county_slug}/">{esc(county)}</a>' if county_slug else ""
+    permit_block = ""
+    if c_info:
+        permit_block = f"""
+      <div class="panel" style="margin-top: 1.5rem;">
+        <h2 style="margin-top:0;">Local Soil Profile, Building Eras &amp; Permits in {esc(city)}, CA</h2>
+        <p><strong>Soil Movement Profile:</strong> {esc(local_context)}</p>
+        <p><strong>Common Area Housing Foundations:</strong> {esc(c_info["era"])}</p>
+        <p style="margin-bottom:0;"><strong>Building Permits &amp; Curb Drainage:</strong> {esc(c_info["drainage_rule"])} Confirm structural permit triggers via <a href="{c_info["permit_url"]}" target="_blank" rel="noopener noreferrer">{esc(c_info["permit_label"])}</a>.</p>
+      </div>"""
+
     body = f"""
 <div class="wrap">
-  <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; <a href="/directory/">Directory</a> &rsaquo; {esc(city)}, CA</div>
+  <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/directory/">Directory</a>{county_crumb} &rsaquo; {esc(city)}, CA</nav>
   <h1>Foundation Repair Contractors in {esc(city)}, CA</h1>
   <p style="font-size:1.05rem; color: var(--muted);">
     Comparing {len(list_co)} local foundation repair, house leveling, crawlspace encapsulation, and French drain companies serving {esc(city)} ({esc(county)}{f", ZIP codes {esc(local_zips)}" if local_zips else ""}).
@@ -1363,6 +1477,8 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
       <h2 style="margin-top:0;">Local Foundation, Crawlspace &amp; Drainage Companies in {esc(city)} ({len(list_co)})</h2>
       <div class="biz-grid">{cards_html}</div>
 
+      {permit_block}
+
       <div class="panel" style="margin-top: 1.75rem;">
         <h2 style="margin-top:0;">{esc(city)}, CA Foundation Repair Cost &amp; Homeowner FAQs</h2>
         <h3>What is the average price for foundation repair?</h3>
@@ -1382,8 +1498,10 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
     <div>
       {render_quote_form(default_city=city, heading=f"Request {city} Quotes")}
       <div class="panel" style="margin-top: 1.25rem;">
-        <h3 style="margin-top:0;">Explore By Service</h3>
+        <h3 style="margin-top:0;">Core Service Guides</h3>
         <div style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom:1.1rem;">{silo_links}</div>
+        <h3 style="margin-top:0;">Regional Specialty Topics</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom:1.1rem;">{edge_links}</div>
         <h3 style="margin-top:0;">Nearby Service Cities</h3>
         <div style="display:flex; flex-wrap:wrap; gap:0.45rem;">{nearby}</div>
       </div>
@@ -1398,6 +1516,138 @@ def build_city_page(city: str, county: str, list_co: list, all_cities: list) -> 
         body,
         all_cities,
         schema,
+        geo_place=f"{city}, CA",
+        geo_pos=geo_pos,
+    )
+
+
+def build_county_page(county: str, cities_dict: dict, all_cities: list) -> str:
+    info = COUNTY_INFO[county]
+    cslug = info["slug"]
+    canon = f"/directory/california/{cslug}/"
+    county_cities = [c for c in all_cities if cities_dict.get(c) and cities_dict[c][0]["county"] == county]
+    list_co = [co for c in county_cities for co in cities_dict[c]]
+    city_cards = "".join(
+        f'<li><a href="/directory/california/{city_slug(c)}/"><strong>{esc(c)}, CA</strong><span class="count">{len(cities_dict[c])} listed contractors</span></a></li>'
+        for c in county_cities
+    )
+    cards_html = "".join(render_card(c) for c in sorted(list_co, key=lambda x: ((x.get("reviews") or 0), (x.get("rating") or 0.0)), reverse=True)[:18])
+    silo_links = "".join(
+        f'<a class="btn subtle" href="/services/{s["slug"]}/">{esc(s["name"])}</a>'
+        for s in SERVICE_SILOS
+    )
+    other_counties = "".join(
+        f'<a class="btn subtle" href="/directory/california/{v["slug"]}/">{esc(k)}</a>'
+        for k, v in COUNTY_INFO.items() if k != county
+    )
+
+    schema = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{DOMAIN}/"},
+                    {"@type": "ListItem", "position": 2, "name": "Directory", "item": f"{DOMAIN}/directory/"},
+                    {"@type": "ListItem", "position": 3, "name": county, "item": f"{DOMAIN}{canon}"},
+                ],
+            },
+            {
+                "@type": "ItemList",
+                "name": f"Foundation Repair, Leveling & Drainage Contractors in {county}, CA",
+                "numberOfItems": len(list_co),
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": idx,
+                        "name": c["name"],
+                        "url": f"{DOMAIN}/company/california/{city_slug(c['city'])}/{c['slug']}/",
+                    }
+                    for idx, c in enumerate(list_co[:24], start=1)
+                ],
+            },
+            {
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": f"How much does foundation repair or drainage installation cost in {county}?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": f"In {county}, exterior French drains and crawlspace moisture barriers run $2,500 to $6,500, while structural underpinning piers and full crawlspace encapsulation average $6,500 to $25,000.",
+                        },
+                    },
+                    {
+                        "@type": "Question",
+                        "name": f"Do foundation repairs or retaining walls in {county} require building permits?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": f"Yes, structural pier underpinning, post-tension slab modifications, and retaining walls over 3 to 4 feet typically require engineering plans and permits through {info['permit_label']}.",
+                        },
+                    },
+                ],
+            },
+        ],
+    }
+
+    body = f"""
+<div class="wrap">
+  <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/directory/">Directory</a> &rsaquo; {esc(county)}</nav>
+  <h1>Foundation Repair, House Leveling &amp; Drainage Contractors in {esc(county)}, CA</h1>
+  <p style="font-size:1.05rem; color: var(--muted);">
+    Comparing {len(list_co)} local structural stabilization, slab leveling, crawlspace waterproofing, and French drain specialists across {len(county_cities)} {esc(county)} communities.
+  </p>
+
+  <div class="two-col">
+    <div>
+      <h2 style="margin-top:0;">Cities Covered in {esc(county)}</h2>
+      <ul class="city-cards" style="margin-top:0.5rem;">{city_cards}</ul>
+
+      <div class="panel" style="margin-bottom:1.5rem;">
+        <h2 style="margin-top:0;">Local Soil Conditions, Housing Eras &amp; Permits in {esc(county)}</h2>
+        <h3>Local Soil Profile</h3>
+        <p class="direct-answer">{esc(info["soil"])}</p>
+        <h3>Common Home Construction Eras</h3>
+        <p>{esc(info["era"])}</p>
+        <h3>Local Building Permits &amp; Curb Drainage Rules</h3>
+        <p style="margin-bottom:0;">{esc(info["drainage_rule"])} Confirm active permits via <a href="{info["permit_url"]}" target="_blank" rel="noopener noreferrer">{esc(info["permit_label"])}</a> and verify contractor licenses on <a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB</a>.</p>
+      </div>
+
+      <h2>Top Reviewed Specialists in {esc(county)} ({len(list_co)} Total Listed)</h2>
+      <div class="biz-grid">{cards_html}</div>
+
+      <div class="panel" style="margin-top: 1.5rem;">
+        <h2 style="margin-top:0;">{esc(county)} Foundation &amp; Drainage FAQs</h2>
+        <h3>How much does foundation repair or drainage installation cost in {esc(county)}?</h3>
+        <p class="direct-answer">In {esc(county)}, perimeter French drains, downspout extensions, and ground vapor barriers run $2,500 to $6,500, while structural underpinning piers and sealed crawlspace encapsulation run $6,500 to $25,000+.</p>
+        <h3>Do foundation repairs or retaining walls in {esc(county)} require building permits?</h3>
+        <p class="direct-answer">Yes, structural steel piering, post-tension repairs, and tiered retaining walls over 3 to 4 feet generally require city or county permits through {esc(info["permit_label"])}.</p>
+      </div>
+
+      {AUTHORITY_BENCHMARK_TABLE}
+    </div>
+
+    <div>
+      {render_quote_form(default_city=county_cities[0] if county_cities else "", heading=f"Request {county} Quotes")}
+      <div class="panel" style="margin-top: 1.25rem;">
+        <h3 style="margin-top:0;">4 Core Service Buying Guides</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom:1.1rem;">{silo_links}</div>
+        <h3 style="margin-top:0;">Nearby County Directories</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:0.45rem;">{other_counties}</div>
+      </div>
+    </div>
+  </div>
+</div>
+"""
+    return page_shell(
+        f"{county} Foundation Repair, Leveling & Drainage Contractors",
+        f"Compare {len(list_co)} foundation repair, crawlspace encapsulation, and French drain specialists across {len(county_cities)} {county}, CA cities.",
+        canon,
+        body,
+        all_cities,
+        schema,
+        geo_place=info["geo"],
+        geo_pos=info["pos"],
     )
 
 
@@ -1469,9 +1719,9 @@ def build_company_page(c: dict, cities_dict: dict, all_cities: list) -> str:
 
     body = f"""
 <div class="wrap">
-  <div class="breadcrumbs">
+  <nav class=\"breadcrumbs\" aria-label=\"Breadcrumb\">
     <a href="/">Home</a> &rsaquo; <a href="/directory/">Directory</a> &rsaquo; <a href="/directory/california/{cslug}/">{esc(c["city"])}, CA</a> &rsaquo; {esc(c["name"])}
-  </div>
+  </nav>
   <h1>{esc(c["name"])}</h1>
   <p style="color:var(--muted); margin-top:0;">{esc(c.get("category", "Contractor"))} serving {esc(c["city"])} &amp; {esc(c["county"])}</p>
 
@@ -1518,13 +1768,34 @@ def build_company_page(c: dict, cities_dict: dict, all_cities: list) -> str:
 
 def build_service_page(silo: dict, contractors: list, all_cities: list) -> str:
     canon = f"/services/{silo['slug']}/"
+    parent_slug = silo.get("silo_slug")
+    parent_name = silo.get("silo_name") or silo["name"]
+    match_tok = "Foundation Repair" if not parent_slug else None
+    if not parent_slug:
+        tok = silo["slug"]
+        if "leveling" in tok:
+            match_tok = "House Leveling"
+        elif "crawlspace" in tok:
+            match_tok = "Crawlspace"
+        elif "drainage" in tok:
+            match_tok = "Drainage"
+    else:
+        if "leveling" in parent_slug:
+            match_tok = "House Leveling"
+        elif "crawlspace" in parent_slug:
+            match_tok = "Crawlspace"
+        elif "drainage" in parent_slug:
+            match_tok = "Drainage"
+        else:
+            match_tok = "Foundation Repair"
+
     matching = [
         c for c in contractors
-        if silo["match_token"].lower() in " ".join(c.get("services", [])).lower()
+        if match_tok.lower() in " ".join(c.get("services", [])).lower()
     ]
     if not matching:
         matching = contractors[:12]
-    cards_html = "".join(render_card(c) for c in matching[:24])
+    cards_html = "".join(render_card(c) for c in matching[:18])
     city_btns = "".join(
         f'<a class="btn subtle" href="/directory/california/{city_slug(c)}/">{esc(c)}</a>'
         for c in all_cities
@@ -1540,14 +1811,25 @@ def build_service_page(silo: dict, contractors: list, all_cities: list) -> str:
         for q, a in faq_pairs
     ]
 
+    crumb_items = [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{DOMAIN}/"},
+        {"@type": "ListItem", "position": 2, "name": "Directory", "item": f"{DOMAIN}/directory/"},
+    ]
+    if parent_slug and parent_slug != silo["slug"]:
+        crumb_items.append({"@type": "ListItem", "position": 3, "name": parent_name, "item": f"{DOMAIN}/services/{parent_slug}/"})
+        crumb_items.append({"@type": "ListItem", "position": 4, "name": silo["name"], "item": f"{DOMAIN}{canon}"})
+        crumb_html = f'<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/directory/">Directory</a> &rsaquo; <a href="/services/{parent_slug}/">{esc(parent_name)}</a> &rsaquo; {esc(silo["name"])}</nav>'
+    else:
+        crumb_items.append({"@type": "ListItem", "position": 3, "name": silo["name"], "item": f"{DOMAIN}{canon}"})
+        crumb_html = f'<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/directory/">Directory</a> &rsaquo; {esc(silo["name"])}</nav>'
+
+    chart_fname = silo.get("chart") or "sacramento-repair-methods-cost-comparison-2026.jpg"
+    og_img = f"{DOMAIN}/assets/{chart_fname}"
+
     graph = [
         {
             "@type": "BreadcrumbList",
-            "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{DOMAIN}/"},
-                {"@type": "ListItem", "position": 2, "name": "Directory", "item": f"{DOMAIN}/directory/"},
-                {"@type": "ListItem", "position": 3, "name": silo["name"], "item": f"{DOMAIN}{canon}"},
-            ],
+            "itemListElement": crumb_items,
         },
         {
             "@type": "ItemList",
@@ -1560,7 +1842,7 @@ def build_service_page(silo: dict, contractors: list, all_cities: list) -> str:
                     "name": c["name"],
                     "url": f"{DOMAIN}/company/california/{city_slug(c['city'])}/{c['slug']}/",
                 }
-                for idx, c in enumerate(matching[:24], start=1)
+                for idx, c in enumerate(matching[:18], start=1)
             ],
         },
         {
@@ -1597,9 +1879,39 @@ def build_service_page(silo: dict, contractors: list, all_cities: list) -> str:
 
     schema = {"@context": "https://schema.org", "@graph": graph}
 
+    # Silo cluster cross-links panel (outside prose <article> to keep link spacing clean)
+    silo_target = parent_slug or silo["slug"]
+    cluster_mates = [
+        g for g in ALL_SERVICE_GUIDES
+        if (g.get("silo_slug") == silo_target or g["slug"] == silo_target) and g["slug"] != silo["slug"]
+    ]
+    cluster_btns = "".join(
+        f'<a class="btn subtle" href="/services/{g["slug"]}/">{esc(g["name"])}</a>'
+        for g in cluster_mates
+    )
+    cluster_panel = f"""
+      <div class="panel" style="margin-bottom:1.75rem;">
+        <h2 style="margin-top:0;">Related Buying Guides &amp; Technical Comparisons</h2>
+        <p style="font-size:0.92rem; color:var(--muted); margin-top:0;">Explore companion homeowner guides in this topic series or download the full <a href="/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf" target="_blank" rel="noopener">2026 California Foundation &amp; CSLB Benchmark PDF</a>.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">{cluster_btns}</div>
+      </div>""" if cluster_btns else ""
+
+    chart_figure = ""
+    if chart_fname == "sacramento-repair-methods-cost-comparison-2026.jpg":
+        chart_figure = """
+      <div class="panel" style="margin-bottom:1.75rem;">
+        <h2 style="margin-top:0;">2026 Greater Sacramento Cost Comparison by Repair Method</h2>
+        <figure style="margin:0; padding:0.75rem; border:1px solid var(--border); border-radius:8px; background:#fff;">
+          <img src="/assets/sacramento-repair-methods-cost-comparison-2026.jpg" alt="2026 Sacramento foundation repair, house leveling, crawlspace encapsulation, and French drain cost comparison chart" width="1200" height="700" loading="lazy" style="width:100%; height:auto; display:block; border-radius:6px;" />
+          <figcaption style="font-size:0.84rem; color:var(--muted); margin-top:0.6rem;">
+            Chart: 2026 Greater Sacramento observed cost range across concrete lifting, crawlspace shimming, French drains, encapsulation, and steel underpinning. Sources: <a href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx" target="_blank" rel="noopener noreferrer">California CSLB</a> &amp; <a href="https://www.conservation.ca.gov/cgs" target="_blank" rel="noopener noreferrer">CA Geological Survey</a> | <a href="/assets/california-foundation-crawlspace-drainage-benchmarks-2026.pdf" target="_blank" rel="noopener">Download Companion Benchmark PDF</a> | <a href="https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026" target="_blank" rel="noopener noreferrer">Archive.org Mirror</a>.
+          </figcaption>
+        </figure>
+      </div>"""
+
     if silo.get("html"):
         author_box = f"""
-      <div class="panel" style="margin-bottom:2rem; display:flex; flex-direction:column; gap:0.4rem;">
+      <div class="panel" style="margin-bottom:1.75rem; display:flex; flex-direction:column; gap:0.4rem;">
         <div style="font-size:0.82rem; font-weight:800; text-transform:uppercase; color:var(--accent-mid);">About the Author</div>
         <div style="font-weight:800; font-size:1.08rem; color:var(--heading);">
           <a href="https://www.facebook.com/mollyperkins354" target="_blank" rel="noopener author">Molly Perkins</a>
@@ -1610,6 +1922,8 @@ def build_service_page(silo: dict, contractors: list, all_cities: list) -> str:
       </div>"""
         main_col = f"""
       {silo["html"]}
+      {chart_figure}
+      {cluster_panel}
       {author_box}
       <h2>Compare Local {esc(silo["name"])} Specialists ({len(matching)})</h2>
       <p style="color:var(--muted); margin-top:0;">Review area contractors serving Greater Sacramento, Placer, and El Dorado counties, or claim your company profile to update details.</p>
@@ -1618,21 +1932,21 @@ def build_service_page(silo: dict, contractors: list, all_cities: list) -> str:
     else:
         main_col = f"""
       <h2 style="margin-top:0;">Matching Local Specialists ({len(matching)})</h2>
-      <div class="biz-grid">{cards_html}</div>
-      <div class="panel" style="margin-top:1.5rem;">
-        <h2 style="margin-top:0;">{esc(silo["faq_q"])}</h2>
-        <p style="margin-bottom:0;">{esc(silo["faq_a"])}</p>
-      </div>"""
-        subhead = f'<p style="font-size:1.05rem; color:var(--muted); max-width:74ch;">{esc(silo["intro"])}</p>'
+      <div class="biz-grid">{cards_html}</div>"""
+        subhead = f'<p style="font-size:1.05rem; color:var(--muted); max-width:74ch;">{esc(silo.get("intro", silo["desc"]))}</p>'
 
     silo_nav = "".join(
         f'<a class="btn subtle" href="/services/{s["slug"]}/">{esc(s["name"])}</a>'
         for s in SERVICE_SILOS if s["slug"] != silo["slug"]
     )
+    edge_nav = "".join(
+        f'<a class="btn subtle" href="/services/{g["slug"]}/">{esc(g["name"])}</a>'
+        for g in CLUSTER_ARTICLES if g["slug"] != silo["slug"]
+    )
 
     body = f"""
 <div class="wrap">
-  <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; <a href="/directory/">Directory</a> &rsaquo; {esc(silo["name"])}</div>
+  {crumb_html}
   <h1>{silo["h1"]}</h1>
   {subhead}
 
@@ -1642,10 +1956,12 @@ def build_service_page(silo: dict, contractors: list, all_cities: list) -> str:
       {AUTHORITY_BENCHMARK_TABLE}
     </div>
     <div>
-      {render_quote_form(default_service=silo["name"], heading=f"Request {silo['name']} Quotes")}
+      {render_quote_form(default_service=parent_name, heading=f"Request {silo['name']} Quotes")}
       <div class="panel" style="margin-top:1.25rem;">
-        <h3 style="margin-top:0;">Related Buying Guides</h3>
+        <h3 style="margin-top:0;">Core Pillar Guides</h3>
         <div style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom:1.1rem;">{silo_nav}</div>
+        <h3 style="margin-top:0;">Deep-Dive Comparison Guides</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom:1.1rem;">{edge_nav}</div>
         <h3 style="margin-top:0;">Browse By City</h3>
         <div style="display:flex; flex-wrap:wrap; gap:0.45rem;">{city_btns}</div>
       </div>
@@ -1653,7 +1969,7 @@ def build_service_page(silo: dict, contractors: list, all_cities: list) -> str:
   </div>
 </div>
 """
-    return page_shell(silo["title"], silo["desc"], canon, body, all_cities, schema)
+    return page_shell(silo["title"], silo["desc"], canon, body, all_cities, schema, og_image=og_img)
 
 
 def build_static_pages(all_cities: list) -> dict:
@@ -1666,7 +1982,7 @@ def build_static_pages(all_cities: list) -> dict:
         "/quote/",
         f"""
 <div class="wrap" style="max-width: 780px; margin: 2.25rem auto 4rem;">
-  <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; Request Quotes</div>
+  <nav class=\"breadcrumbs\" aria-label=\"Breadcrumb\"><a href="/">Home</a> &rsaquo; Request Quotes</nav>
   <h1>Request Foundation Repair or Drainage Quotes in Sacramento</h1>
   <p style="color: var(--muted);">
     Tell us what your home or crawlspace needs below, or call our dispatch desk at <a href="tel:{TRACKING_TEL}"><strong>{TRACKING_PHONE}</strong></a>. Submitting a request here is free; individual contractors confirm upfront if a diagnostic or real-estate escrow inspection fee applies.
@@ -1681,7 +1997,7 @@ def build_static_pages(all_cities: list) -> dict:
     # /claim/
     claim_body = f"""
 <div class="wrap" style="max-width: 740px; margin: 2.25rem auto 4rem;">
-  <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; Claim Profile</div>
+  <nav class=\"breadcrumbs\" aria-label=\"Breadcrumb\"><a href="/">Home</a> &rsaquo; Claim Profile</nav>
   <h1>Claim Your Free Contractor Profile</h1>
   <p style="color: var(--muted);">
     Own or manage a foundation repair, crawlspace waterproofing, or drainage company in Greater Sacramento? Verify your profile below to update your phone number, add your CSLB license, and opt into direct homeowner quote alerts.
@@ -1759,7 +2075,7 @@ def build_static_pages(all_cities: list) -> dict:
     # /featured/
     featured_body = f"""
 <div class="wrap" style="margin: 2rem auto 4rem;">
-  <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; Featured &amp; Lead Routing</div>
+  <nav class=\"breadcrumbs\" aria-label=\"Breadcrumb\"><a href="/">Home</a> &rsaquo; Featured &amp; Lead Routing</nav>
   <div id="subBanner" class="panel" style="display:none; background:#ecfdf5; border:2px solid #10b981; color:#065f46; margin-bottom:1.25rem;">
     <strong>Subscription Active.</strong> Thank you! Send your company name, target city, CSLB number, and dispatch phone below (or call <a href="tel:{TRACKING_TEL}">{TRACKING_PHONE}</a>) so we pin your Featured Sponsor card live right away.
   </div>
@@ -1865,7 +2181,7 @@ def build_static_pages(all_cities: list) -> dict:
         "/about/",
         f"""
 <div class="wrap" style="max-width: 800px; margin: 2.25rem auto 4rem;">
-  <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; About</div>
+  <nav class=\"breadcrumbs\" aria-label=\"Breadcrumb\"><a href="/">Home</a> &rsaquo; About</nav>
   <h1>About {SITE_NAME}</h1>
   <p>
     <strong>foundationcrawlspace.online</strong> is an independent regional directory covering residential and light commercial foundation repair, house leveling, crawlspace encapsulation, vapor barriers, French drains, and sump pump drainage across Greater Sacramento, Placer County, and El Dorado County.
@@ -1891,7 +2207,7 @@ def build_static_pages(all_cities: list) -> dict:
         "/contact/",
         f"""
 <div class="wrap" style="max-width: 760px; margin: 2.25rem auto 4rem;">
-  <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; Contact</div>
+  <nav class=\"breadcrumbs\" aria-label=\"Breadcrumb\"><a href="/">Home</a> &rsaquo; Contact</nav>
   <h1>Contact Directory Desk</h1>
   <p>Call or text <a href="tel:{TRACKING_TEL}"><strong>{TRACKING_PHONE}</strong></a>, email <a href="mailto:goldstandardaiagency@gmail.com">goldstandardaiagency@gmail.com</a>, or send a note below.</p>
   {render_quote_form(heading="Send a Message or Listing Update")}
@@ -1908,7 +2224,7 @@ def build_static_pages(all_cities: list) -> dict:
         "/privacy-policy/",
         f"""
 <div class="wrap" style="max-width: 800px; margin: 2.25rem auto 4rem;">
-  <div class="breadcrumbs"><a href="/">Home</a> &rsaquo; Privacy Policy</div>
+  <nav class=\"breadcrumbs\" aria-label=\"Breadcrumb\"><a href="/">Home</a> &rsaquo; Privacy Policy</nav>
   <h1>Privacy Policy</h1>
   <p>
     When you submit an estimate request, inspection inquiry, or contractor profile claim on <strong>foundationcrawlspace.online</strong>, we use your contact information strictly to follow up on your request or connect you with participating foundation, crawlspace, or drainage contractors in your service area.
@@ -1950,10 +2266,15 @@ def main():
     urls.append("/directory/")
     write_page("/directory/", build_directory_index(contractors, all_cities))
 
-    for silo in SERVICE_SILOS:
+    for silo in ALL_SERVICE_GUIDES:
         path = f"/services/{silo['slug']}/"
         urls.append(path)
         write_page(path, build_service_page(silo, contractors, all_cities))
+
+    for county_name, c_info in COUNTY_INFO.items():
+        path = f"/directory/california/{c_info['slug']}/"
+        urls.append(path)
+        write_page(path, build_county_page(county_name, cities_dict, all_cities))
 
     for city in all_cities:
         list_co = cities_dict[city]
@@ -2073,7 +2394,11 @@ Sitemap: {DOMAIN}/sitemap.xml
     )
     guide_summary_lines = "\n".join(
         f"- [{s['title']}]({DOMAIN}/services/{s['slug']}/): {s['desc']}"
-        for s in SERVICE_SILOS
+        for s in ALL_SERVICE_GUIDES
+    )
+    county_summary_lines = "\n".join(
+        f"- [{cname}, CA Directory & Soil Guide]({DOMAIN}/directory/california/{cinfo['slug']}/): {cinfo['soil']}"
+        for cname, cinfo in COUNTY_INFO.items()
     )
     llms_txt = f"""# {SITE_NAME} (foundationcrawlspace.online)
 
@@ -2095,6 +2420,9 @@ Sitemap: {DOMAIN}/sitemap.xml
 - **Pier-and-Beam House Leveling Cost**: $2,500 to $6,500 for accessible crawlspace re-shimming and adjustable steel posts; full deep-pier slab lifting runs $8,000 to $25,000+.
 - **Polyurethane Foam Slab Lifting**: $1,500 to $4,500 for settled interior slab pockets, driveways, or garages.
 - **Homeowners Insurance Rule**: Standard California policies exclude clay-soil movement; coverage applies only when a sudden plumbing break under the slab washes out support soil.
+
+## County Contractor Directories
+{county_summary_lines}
 
 ## City Contractor Directories
 {city_summary_lines}

@@ -21,6 +21,13 @@
       "item_url": "https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026",
       "file_url": "https://archive.org/download/sacramento-foundation-crawlspace-benchmarks-2026/greater-sacramento-contractor-coverage-tiers.jpg",
       "filename": "greater-sacramento-contractor-coverage-tiers.jpg"
+    },
+    {
+      "success": true,
+      "status_code": 200,
+      "item_url": "https://archive.org/details/sacramento-foundation-crawlspace-benchmarks-2026",
+      "file_url": "https://archive.org/download/sacramento-foundation-crawlspace-benchmarks-2026/sacramento-repair-methods-cost-comparison-2026.jpg",
+      "filename": "sacramento-repair-methods-cost-comparison-2026.jpg"
     }
   ]
 }

@@ -32,6 +32,7 @@ PDF_PATH = ASSETS_DIR / PDF_NAME
 
 CHART1_NAME = "sacramento-foundation-repair-cost-cslb-benchmarks.jpg"
 CHART2_NAME = "greater-sacramento-contractor-coverage-tiers.jpg"
+CHART3_NAME = "sacramento-repair-methods-cost-comparison-2026.jpg"
 
 DIR_BUSINESS = {
     "name": "Foundation & Crawlspace Directory",
@@ -206,7 +207,68 @@ def draw_city_coverage_chart(tmp_path: Path, contractors: list):
     img.save(tmp_path, "JPEG", quality=95)
 
 
-def build_companion_pdf(chart1: Path, chart2: Path, contractors: list):
+def draw_methods_comparison_chart(tmp_path: Path):
+    w, h = 1200, 700
+    img = Image.new("RGB", (w, h), (11, 37, 69))
+    d = ImageDraw.Draw(img)
+
+    d.rectangle([0, 0, w, 10], fill=(56, 189, 248))
+    panel_l, panel_t, panel_r, panel_b = 36, 32, w - 36, h - 32
+    pad_l = 68
+    pad_r = panel_r - 32
+    max_full_w = pad_r - pad_l
+    d.rounded_rectangle([panel_l, panel_t, panel_r, panel_b], radius=16, fill=(15, 48, 88), outline=(251, 191, 36), width=2)
+
+    tag_txt = "GREATER SACRAMENTO REPAIR METHOD & PRICE COMPARISON (2026)"
+    title_txt = "Cost Range by Repair Method: Drainage, Leveling, Crawlspace & Piers"
+    sub_txt = "Observed Greater Sacramento residential ranges from itemized project quotes & CSLB public filings"
+
+    f_tag = _fit_font(d, tag_txt, 17, max_full_w, bold=True)
+    f_title = _fit_font(d, title_txt, 30, max_full_w, bold=True)
+    f_sub = _fit_font(d, sub_txt, 18, max_full_w, bold=False)
+
+    d.text((pad_l, 56), tag_txt, font=f_tag, fill=(251, 191, 36))
+    d.text((pad_l, 88), title_txt, font=f_title, fill=(255, 255, 255))
+    d.text((pad_l, 132), sub_txt, font=f_sub, fill=(203, 213, 225))
+    _assert_fits(d, pad_l, title_txt, f_title, pad_r, "Chart3 Title")
+
+    bar_x = 530
+    bar_max_w = pad_r - bar_x
+    lbl_max_w = bar_x - pad_l - 22
+
+    rows = [
+        ("Polyurethane Foam Slab Lifting", "$1,500 - $4,500", 0.24, (56, 189, 248), (11, 37, 69), "Driveways, patios, pool decks (30-min cure)"),
+        ("Pier-and-Beam Shimming & Jacks", "$2,500 - $6,500", 0.34, (34, 197, 94), (11, 37, 69), "Raised crawlspace leveling & steel support posts"),
+        ("French Drains & Downspout Pipe", "$2,500 - $11,000", 0.50, (16, 185, 129), (11, 37, 69), "$25 to $65 per linear ft (rigid PVC + rock)"),
+        ("20-Mil Sealed Encapsulation", "$4,500 - $12,500", 0.58, (251, 191, 36), (11, 37, 69), "Sealed liner + vents + dehumidifier"),
+        ("Helical / Push Pier Underpinning", "$6,500 - $25,000+", 0.94, (245, 158, 11), (11, 37, 69), "Structural bedrock piers ($1,600-$3,000/pier)"),
+    ]
+
+    y = 186
+    for label, val_txt, pct, col, val_col, sub in rows:
+        lbl_font = _fit_font(d, label, 19, lbl_max_w, bold=True)
+        sub_font = _fit_font(d, sub, 15, lbl_max_w, bold=False)
+        _assert_fits(d, pad_l, label, lbl_font, bar_x - 16, f"C3 Label {label}")
+        _assert_fits(d, pad_l, sub, sub_font, bar_x - 16, f"C3 Sub {label}")
+
+        d.text((pad_l, y), label, font=lbl_font, fill=(255, 255, 255))
+        d.text((pad_l, y + 27), sub, font=sub_font, fill=(148, 163, 184))
+        d.rounded_rectangle([bar_x, y + 4, bar_x + bar_max_w, y + 44], radius=8, fill=(8, 28, 54))
+        bw = max(175, int(bar_max_w * pct))
+        d.rounded_rectangle([bar_x, y + 4, bar_x + bw, y + 44], radius=8, fill=col)
+        v_font = _fit_font(d, val_txt, 18, bw - 22, bold=True)
+        d.text((bar_x + 12, y + 13), val_txt, font=v_font, fill=val_col)
+        y += 80
+
+    d.line([(pad_l, h - 98), (pad_r, h - 98)], fill=(51, 85, 128), width=2)
+    src1 = "Sources: California CSLB (cslb.ca.gov) | CA Geological Survey (conservation.ca.gov/cgs) | CA Water Resources (water.ca.gov)"
+    src2 = "Compiled by Foundation & Crawlspace Directory (https://foundationcrawlspace.online/services/)"
+    d.text((pad_l, h - 80), src1, font=_fit_font(d, src1, 15, max_full_w, bold=False), fill=(203, 213, 225))
+    d.text((pad_l, h - 55), src2, font=_fit_font(d, src2, 15, max_full_w, bold=False), fill=(56, 189, 248))
+    img.save(tmp_path, "JPEG", quality=95)
+
+
+def build_companion_pdf(chart1: Path, chart2: Path, chart3: Path, contractors: list):
     doc = SimpleDocTemplate(
         str(PDF_PATH),
         pagesize=letter,
@@ -259,6 +321,8 @@ def build_companion_pdf(chart1: Path, chart2: Path, contractors: list):
     story.append(tbl)
     story.append(Spacer(1, 12))
     story.append(RLImage(str(chart2), width=7.1 * inch, height=4.14 * inch))
+    story.append(Spacer(1, 12))
+    story.append(RLImage(str(chart3), width=7.1 * inch, height=4.14 * inch))
     story.append(Spacer(1, 8))
     story.append(Paragraph(
         "Direct City Profiles &amp; Claim Portal: https://foundationcrawlspace.online/directory/ | "
@@ -272,11 +336,14 @@ def main():
     contractors = json.loads((BASE_DIR / "contractors_data.json").read_text(encoding="utf-8"))
     tmp1 = ASSETS_DIR / "_tmp_chart1.jpg"
     tmp2 = ASSETS_DIR / "_tmp_chart2.jpg"
+    tmp3 = ASSETS_DIR / "_tmp_chart3.jpg"
     out1 = ASSETS_DIR / CHART1_NAME
     out2 = ASSETS_DIR / CHART2_NAME
+    out3 = ASSETS_DIR / CHART3_NAME
 
     draw_cost_cslb_chart(tmp1)
     draw_city_coverage_chart(tmp2, contractors)
+    draw_methods_comparison_chart(tmp3)
 
     res1 = inject_image_metadata(
         str(tmp1),
@@ -312,15 +379,35 @@ def main():
         companion_pdf_url=PDF_URL,
         preserve_dimensions=True,
     )
+    res3 = inject_image_metadata(
+        str(tmp3),
+        str(out3),
+        service="Foundation Repair, House Leveling, Crawlspace & French Drain Cost Comparison",
+        city_name="Roseville",
+        heading="2026 Cost Range by Repair Method Across Sacramento, Placer & El Dorado Counties",
+        keywords=[
+            "helical piers vs push piers sacramento",
+            "mudjacking vs foam jacking roseville",
+            "crawl space encapsulation cost sacramento",
+            "french drain cost per linear foot",
+            "post tension slab repair sacramento",
+        ],
+        business=DIR_BUSINESS,
+        companion_pdf_url=PDF_URL,
+        preserve_dimensions=True,
+    )
     tmp1.unlink(missing_ok=True)
     tmp2.unlink(missing_ok=True)
+    tmp3.unlink(missing_ok=True)
 
     print("[OK] Chart 1 injected:", out1.name, res1["dimensions"], "| GPS:", res1["coordinates"])
     print("[OK] Chart 2 injected:", out2.name, res2["dimensions"], "| GPS:", res2["coordinates"])
+    print("[OK] Chart 3 injected:", out3.name, res3["dimensions"], "| GPS:", res3["coordinates"])
     print("[OK] Verify Chart 1 metadata:", verify_image_metadata(str(out1)))
     print("[OK] Verify Chart 2 metadata:", verify_image_metadata(str(out2)))
+    print("[OK] Verify Chart 3 metadata:", verify_image_metadata(str(out3)))
 
-    build_companion_pdf(out1, out2, contractors)
+    build_companion_pdf(out1, out2, out3, contractors)
     print(f"[OK] Companion PDF built: {PDF_PATH} ({PDF_PATH.stat().st_size:,} bytes)")
 
     ident = "sacramento-foundation-crawlspace-benchmarks-2026"
@@ -329,6 +416,7 @@ def main():
         (PDF_PATH, "2026 Greater Sacramento Foundation, Crawlspace & Drainage Benchmarks (PDF)", "texts"),
         (out1, "Sacramento Foundation Repair Cost & CSLB Bond Benchmarks Chart", "image"),
         (out2, "Greater Sacramento 11-City Foundation Contractor Coverage Chart", "image"),
+        (out3, "Greater Sacramento Repair Methods Cost Comparison Chart (2026)", "image"),
     ]:
         try:
             r = upload_file_to_archive_org(
